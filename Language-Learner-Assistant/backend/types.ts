@@ -1,2 +1,2 @@
 
-export type RoleplayScenario = 'grocery-store' | 'train-station' | 'hotel'
+export type RoleplayScenario = 'Supermarket' | 'TrainStation' | 'Hotel' 
