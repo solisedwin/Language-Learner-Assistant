@@ -5,7 +5,7 @@ import HotelIcon from '@mui/icons-material/Hotel';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToggleButton } from '@mui/material';
 import type { RoleplayScenario } from '../backend/types';
 import AIMicrophone from './AIMicrophone';
@@ -14,6 +14,11 @@ function App() {
 
   const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
   const [showMicrophone, setShowMicrophone] = useState(false);
+  
+  useEffect(() => {
+    //Call backend on page load to get AI text response 
+    
+  }, []);
 
   return (
     <div>

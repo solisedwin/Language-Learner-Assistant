@@ -1,0 +1,8 @@
+
+echo "Running pre-commit checks..."
+
+if git diff --cached --name-only | grep -i '.env*'; then
+    echo "Error: .env files are not allowed in the commit"
+    exit 1
+fi
+#npm test
