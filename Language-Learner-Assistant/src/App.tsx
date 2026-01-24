@@ -18,7 +18,7 @@ function App() {
   
   useEffect(() => {
     //Call backend on page load to get AI text response 
-    axios.post('http://localhost:5173/OpenAI')
+    axios.post('http://localhost:3000/OpenAI')
     .then(data => {
       console.log(data);
     })
@@ -37,7 +37,11 @@ function App() {
       <Grid container spacing={3}>
         <Grid size={4}>
           <ToggleButton value='Supermarket'>
-            <Fab variant="extended" color='primary'>
+            <Fab 
+              variant='extended' 
+              color='primary' 
+              component='div'
+            >
                 <LocalGroceryStoreIcon sx={{ mr: 1 }} />
                 Grocery Store
             </Fab>
@@ -46,7 +50,11 @@ function App() {
 
           <Grid size={4}>
             <ToggleButton value='TrainStation'>
-              <Fab variant="extended" color='secondary'>
+              <Fab 
+                variant='extended' 
+                color='secondary' 
+                component='div'
+              >
               <TrainIcon sx={{ mr: 1 }} />
               Train Station
               </Fab>
@@ -55,15 +63,19 @@ function App() {
 
         <Grid size={4}>
           <ToggleButton value='Hotel'>
-          <Fab variant="extended" color='warning'>
-              <HotelIcon sx={{ mr: 1 }} />
-              Hotel
-          </Fab>
+              <Fab 
+                variant='extended' 
+                color='warning' 
+                component='div'
+              >
+                <HotelIcon sx={{ mr: 1 }} />
+                  Hotel
+              </Fab>
           </ToggleButton>
         </Grid>
 
           <Grid size={12}>
-            {!showMicrophone &&  <Button variant="contained" color='success' onClick={() => setShowMicrophone(true)}> Start Roleplay </Button> }
+              {!showMicrophone &&  <Button variant="contained" color='success' onClick={() => setShowMicrophone(true)}> Start Roleplay </Button> }
           </Grid>
         </Grid>
       </ToggleButtonGroup>
