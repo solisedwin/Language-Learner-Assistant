@@ -19,4 +19,4 @@ export class OpenAIService {
         });
         return response.output_text;
     }
-}}
+}

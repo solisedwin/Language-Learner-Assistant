@@ -10,14 +10,19 @@ import { ToggleButton } from '@mui/material';
 import type { RoleplayScenario } from '../backend/types';
 import AIMicrophone from './AIMicrophone';
 
-function App() {
+import axios from 'axios';
 
+function App() {
   const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
   const [showMicrophone, setShowMicrophone] = useState(false);
   
   useEffect(() => {
     //Call backend on page load to get AI text response 
-    
+    axios.post('http://localhost:5173/OpenAI')
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => console.error(error));    
   }, []);
 
   return (
@@ -57,11 +62,9 @@ function App() {
           </ToggleButton>
         </Grid>
 
-        <Grid size={12}>
-
-        {!showMicrophone &&  <Button variant="contained" color='success' onClick={() => setShowMicrophone(true)}> Start Roleplay </Button> }
-        
-        </Grid>
+          <Grid size={12}>
+            {!showMicrophone &&  <Button variant="contained" color='success' onClick={() => setShowMicrophone(true)}> Start Roleplay </Button> }
+          </Grid>
         </Grid>
       </ToggleButtonGroup>
 
