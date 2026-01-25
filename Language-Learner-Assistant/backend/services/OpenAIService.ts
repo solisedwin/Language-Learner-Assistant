@@ -12,10 +12,13 @@ export class OpenAIService {
     }
 
     public async generateTextResponse(prompt:string) : Promise<string> {
+        return 'Kai Cenat froze mid-rally on an icy Iceland pickleball court when a seal wandered by and stared him down so intensely.';
+        /*
         const response = await this.client.responses.create({
-            model: "gpt-5.2",
-            input: "Write a one-sentence action story about Kai Cenat playing pickleball."
+            model: "gpt-4.1-mini",
+            input: "Write a one-sentence action story about Kai Cenat playing pickleball in Iceland.",
         });
         return response.output_text;
+        */
     }
 }

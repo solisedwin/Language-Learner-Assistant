@@ -2,17 +2,12 @@ import type { Request, Response } from 'express';
 import { OpenAIService } from '../services/OpenAIService.ts';
 
 
+export const generateTextResponse = (req: Request, res: Response) => {
     const secretKey = process.env.OPENAI_SECRET_KEY || '';
-    console.log(process.env);
     const openAIService = new OpenAIService(secretKey);
 
-export const generateTextResponse = (req: Request, res: Response) => {
-    res.send('Get OpenAI Response');
-    /*
-    openAIService.generateTextResponse('')
+    openAIService.generateTextResponse('Story about Kai Cenat playing pickleball in Iceland')
     .then(responseText => {
         res.json({ text: responseText });
-        
     });
-    */
 };
