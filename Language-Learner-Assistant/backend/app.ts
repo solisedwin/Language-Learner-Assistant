@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import './envconfig.ts';
 import express  from 'express';
 import cors from 'cors';
 import OpenAIRouter from './routes/OpenAIRoutes.ts';

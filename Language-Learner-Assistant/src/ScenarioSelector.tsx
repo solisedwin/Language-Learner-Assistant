@@ -16,7 +16,7 @@ function ScenarioSelector() {
     const startRolePlay = () => {
         request({
             method: 'POST',
-            url: '/OpenAI'
+            url: '/OpenAI/converse'
         }).then(response => {
             console.log(response);
         }).catch(error => {
