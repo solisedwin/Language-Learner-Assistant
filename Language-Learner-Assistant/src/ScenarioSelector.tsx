@@ -7,27 +7,42 @@ import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useState } from 'react';
 import { ToggleButton } from '@mui/material';
-import type { RoleplayScenario } from '../backend/types';
+import type { RoleplayScenario } from '../backend/scenarios/types.ts';
 import {request} from './AxiosUtil';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
 
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
+    const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false)
+    const [audioSource, setAudioSource] = useState<string | undefined>('')
 
     const startRolePlay = () => {
         request({
             method: 'POST',
-            url: '/OpenAI/converse'
+            url: '/OpenAI/converse',
+            data: {
+                scenario: roleplayScenario
+            },
+           responseType: 'arraybuffer'
         }).then(response => {
-            console.log(response);
+            if('data' in response){
+                const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+            
+              //  let audio = new Audio(audioUrl);
+              //  audio.play();
+
+              setAudioSource(audioUrl);
+              setShowAudioPlayer(true);
+            }
         }).catch(error => {
             console.log(error)
         })
     };
-
     return (
         <div>
             Current Roleplay scenario: {roleplayScenario}
-
             <ToggleButtonGroup
                 value={roleplayScenario}
                 onChange={(_, roleplayScenario) => setRoleplayScenario(roleplayScenario)}
@@ -76,11 +91,27 @@ function ScenarioSelector() {
                     </Grid>
 
                     <Grid size={12}>
-                        <Button variant="contained" color='success' onClick={() => startRolePlay()}> Start Roleplay </Button>
+                        <Button 
+                            variant="contained" 
+                            color='success' 
+                            onClick={() => startRolePlay()}>
+                            Start Roleplay
+                        </Button>
                     </Grid>
                 </Grid>
             </ToggleButtonGroup>
 
+          { showAudioPlayer && 
+                <Card sx={{maxWidth: 300}}>
+                    <CardMedia
+                        sx={{height:40}}
+                        component="audio"
+                        controls
+                        src={audioSource}
+                    >
+                    </CardMedia>
+                </Card>
+        }   
         </div>
     );
 }

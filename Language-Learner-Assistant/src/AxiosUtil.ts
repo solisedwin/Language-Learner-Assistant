@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
-
+   
 const client = axios.create({
     baseURL: 'http://localhost:3000',
     headers: {

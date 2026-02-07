@@ -1,4 +1,4 @@
-import  RoleplayScenario  from './RoleplayScenario';
+import Scenario from './Scenario.ts';
 
 const START_CONVERSATION = `
 You are Lex, a ticket inspector at a German train station. Your role is to check tickets and assist passengers in German.
@@ -28,7 +28,10 @@ Keep the conversation professional and ensure the passenger feels respected and 
 Keep the response to less than 50 characters.
 `
 
-class TrainStation extends RoleplayScenario {
+export default class TrainStation extends Scenario {
+    START_CONVERSATION: string = START_CONVERSATION;
+    CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
+    
     constructor(){
         super('supermarket cashier');
     }

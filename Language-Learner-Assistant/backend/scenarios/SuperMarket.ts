@@ -1,4 +1,4 @@
-import  RoleplayScenario  from './RoleplayScenario';
+import  Scenario  from './Scenario.ts';
 
 const START_CONVERSATION = `
 You are a friendly supermarket cashier. Your role is to assist customers in German.
@@ -28,7 +28,10 @@ Keep the conversation natural and engaging, and ensure the customer feels well t
 Keep the response to less than 50 characters.
 `;
 
-class SuperMarket extends RoleplayScenario {
+export default class SuperMarket extends Scenario {
+    START_CONVERSATION: string = START_CONVERSATION;
+    CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
+    
     constructor(){
         super('supermarket cashier');
     }
