@@ -14,27 +14,20 @@ import CardMedia from '@mui/material/CardMedia';
 
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
-    const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false)
-    const [audioSource, setAudioSource] = useState<string | undefined>('')
+    const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
+    const [audioSource, setAudioSource] = useState<string | undefined>('');
 
     const startRolePlay = () => {
         request({
             method: 'POST',
-            url: '/OpenAI/converse',
+            url: '/converse',
             data: {
                 scenario: roleplayScenario
             },
-           responseType: 'arraybuffer'
         }).then(response => {
-            if('data' in response){
-                const audioBlob = new Blob([response.data], { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-            
-              //  let audio = new Audio(audioUrl);
-              //  audio.play();
-
-              setAudioSource(audioUrl);
-              setShowAudioPlayer(true);
+            if('data' in response) {
+                setAudioSource(response.data.audioURLSrc);
+                setShowAudioPlayer(true);
             }
         }).catch(error => {
             console.log(error)

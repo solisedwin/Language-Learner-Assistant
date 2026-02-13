@@ -1,7 +1,7 @@
 import './envconfig.ts';
 import express  from 'express';
 import cors from 'cors';
-import OpenAIRouter from './routes/OpenAIRoutes.ts';
+import ConversationRouter from './routes/ConversationRoutes.ts'
 
 const app = express();
 app.use(express.json());
@@ -13,7 +13,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use('/OpenAI', OpenAIRouter);
+app.use('/api/converse', ConversationRouter);
 
 app.listen(3000, () => {
   console.log('### Server is running on http://localhost:3000');
