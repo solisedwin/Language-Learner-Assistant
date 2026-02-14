@@ -8,7 +8,7 @@ const client = axios.create({
     },
 });
 
-export const request = ({...options}) => {
+export const request= ({...options})  => {
     const onSuccess = (response : AxiosResponse)  => response;
     const onError = (error : AxiosError) => error;
     return client(options).then(onSuccess).catch(onError);

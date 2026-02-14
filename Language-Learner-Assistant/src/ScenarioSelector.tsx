@@ -1,4 +1,4 @@
-import Fab from '@mui/material/Fab';
+import Fab, { type FabProps } from '@mui/material/Fab';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import TrainIcon from '@mui/icons-material/Train';
 import HotelIcon from '@mui/icons-material/Hotel';
@@ -6,16 +6,43 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useState } from 'react';
-import { ToggleButton } from '@mui/material';
+import { ToggleButton, type SvgIconTypeMap } from '@mui/material';
 import type { RoleplayScenario } from '../backend/scenarios/types.ts';
 import {request} from './AxiosUtil';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
+import type { OverridableComponent } from '@mui/material/OverridableComponent';
+
+type MuiIconComponent = OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+
+type RoleplayScenarioButtons = {
+    scenario: RoleplayScenario,
+    icon: MuiIconComponent,
+    color:  FabProps['color'],
+}
 
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
-    const [showAudioPlayer, setShowAudioPlayer] = useState<boolean>(false);
-    const [audioSource, setAudioSource] = useState<string | undefined>('');
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+    const [audioSource, setAudioSource] = useState('');
+
+    const roleplayScenarioOptions : RoleplayScenarioButtons[]  = [
+        {
+            scenario: 'Supermarket',
+            icon: LocalGroceryStoreIcon,
+            color: 'primary'
+        },
+        {
+            scenario: 'TrainStation',
+            icon: TrainIcon,
+            color: 'secondary'
+        },
+        {
+            scenario: 'Hotel',
+            icon: HotelIcon,
+            color: 'warning'
+            
+        }];
 
     const startRolePlay = () => {
         request({
@@ -42,56 +69,36 @@ function ScenarioSelector() {
                 exclusive
                 aria-label='Roleplay Buttons'
             >
-
                 <Grid container spacing={3}>
-                    <Grid size={4}>
-                        <ToggleButton value='Supermarket'>
+                
+            {
+                    roleplayScenarioOptions.map( ({scenario, icon : Icon, color}, _ ) => (
+                         <ToggleButton 
+                            key={scenario}
+                            value={scenario}
+                        >
                             <Fab
                                 variant='extended'
-                                color='primary'
+                                color={color}
                                 component='div'
                             >
-                                <LocalGroceryStoreIcon sx={{ mr: 1 }} />
-                                Grocery Store
+                                <Icon sx={{ mr: 1 }} />
+                                {scenario}
                             </Fab>
                         </ToggleButton>
-                    </Grid>
+                    ))
+            }
 
-                    <Grid size={4}>
-                        <ToggleButton value='TrainStation'>
-                            <Fab
-                                variant='extended'
-                                color='secondary'
-                                component='div'
-                            >
-                                <TrainIcon sx={{ mr: 1 }} />
-                                Train Station
-                            </Fab>
-                        </ToggleButton>
-                    </Grid>
+            <Grid size={12}>
+                <Button
+                    variant="contained"
+                    color='success'
+                    onClick={() => startRolePlay()}>
+                        Start Roleplay
+                </Button>
+            </Grid>
 
-                    <Grid size={4}>
-                        <ToggleButton value='Hotel'>
-                            <Fab
-                                variant='extended'
-                                color='warning'
-                                component='div'
-                            >
-                                <HotelIcon sx={{ mr: 1 }} />
-                                Hotel
-                            </Fab>
-                        </ToggleButton>
-                    </Grid>
-
-                    <Grid size={12}>
-                        <Button 
-                            variant="contained" 
-                            color='success' 
-                            onClick={() => startRolePlay()}>
-                            Start Roleplay
-                        </Button>
-                    </Grid>
-                </Grid>
+            </Grid>
             </ToggleButtonGroup>
 
           { showAudioPlayer && 
