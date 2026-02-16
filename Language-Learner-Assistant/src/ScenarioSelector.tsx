@@ -12,6 +12,7 @@ import {request} from './AxiosUtil';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
+import Translation from './Translation.tsx';
 
 type MuiIconComponent = OverridableComponent<SvgIconTypeMap<{}, "svg">>;
 
@@ -24,6 +25,7 @@ type RoleplayScenarioButtons = {
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
     const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+    const [germanText, setGermanText] = useState('');
     const [audioSource, setAudioSource] = useState('');
 
     const roleplayScenarioOptions : RoleplayScenarioButtons[]  = [
@@ -53,6 +55,8 @@ function ScenarioSelector() {
             },
         }).then(response => {
             if('data' in response) {
+                const AIResponseText = response.data.text ?? '';
+                setGermanText(AIResponseText);
                 setAudioSource(response.data.audioURLSrc);
                 setShowAudioPlayer(true);
             }
@@ -112,6 +116,10 @@ function ScenarioSelector() {
                     </CardMedia>
                 </Card>
         }   
+
+
+            <Translation germanText={germanText} />
+
         </div>
     );
 }

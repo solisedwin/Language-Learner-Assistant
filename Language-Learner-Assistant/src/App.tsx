@@ -1,8 +1,11 @@
-import ScenarioSelector from './ScenarioSelector';
+
+import  Roleplay  from "./RolePlay"
 
 function App() {
   return (
-    <ScenarioSelector />
+    <>
+      <Roleplay />
+    </>
   )
 }
 export default App
