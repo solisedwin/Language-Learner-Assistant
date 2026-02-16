@@ -25,7 +25,11 @@ type RoleplayScenarioButtons = {
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
     const [showAudioPlayer, setShowAudioPlayer] = useState(false);
-    const [germanText, setGermanText] = useState('');
+    const [languageTexts , setLanguageTexts] = useState({
+        germanText: '',
+        englishTranslation: ''
+    });
+  
     const [audioSource, setAudioSource] = useState('');
 
     const roleplayScenarioOptions : RoleplayScenarioButtons[]  = [
@@ -55,8 +59,14 @@ function ScenarioSelector() {
             },
         }).then(response => {
             if('data' in response) {
-                const AIResponseText = response.data.text ?? '';
-                setGermanText(AIResponseText);
+                const germanText = response.data.text ?? '';
+                const englishTranslation = response.data.translation ?? '';
+                
+                setLanguageTexts({
+                    germanText: germanText,
+                    englishTranslation: englishTranslation
+                });
+              
                 setAudioSource(response.data.audioURLSrc);
                 setShowAudioPlayer(true);
             }
@@ -74,7 +84,6 @@ function ScenarioSelector() {
                 aria-label='Roleplay Buttons'
             >
                 <Grid container spacing={3}>
-                
             {
                     roleplayScenarioOptions.map( ({scenario, icon : Icon, color}, _ ) => (
                          <ToggleButton 
@@ -118,7 +127,9 @@ function ScenarioSelector() {
         }   
 
 
-            <Translation germanText={germanText} />
+            <Translation 
+                {...languageTexts}
+             />
 
         </div>
     );

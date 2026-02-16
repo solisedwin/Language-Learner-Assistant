@@ -3,19 +3,26 @@ import { AudioService } from '../services/AudioService.ts';
 import { ConversationsService } from '../services/ConversationsService';
 import type {RoleplayScenario}  from '../scenarios/types.ts';
 import crypto from "crypto";
+import { TranslationService } from '../services/TranslationService.ts';
 
 const audioService  = new AudioService();
 const conversationService = new ConversationsService();
+const translationService = new TranslationService();
 
 export const generateConversation = async (req: Request, res: Response) => {
     const roleplayScenario : RoleplayScenario = req.body.scenario;
     const text = await conversationService.startConversation(roleplayScenario);
+    let translatedText;
+    if(text){
+        translatedText = await translationService.translateToEnglish(text);
+    }
     const audioBuffer = await audioService.textToSpeech(text);
     const tempAudioSpeechID =  await audioService.cacheAudioSpeech(audioBuffer);
     const audioURLSrc = `api/converse/audiospeech/${tempAudioSpeechID}`;
 
     res.json( {
         text:text,
+        translation: translatedText,
         audioURLSrc: audioURLSrc
     });
 };

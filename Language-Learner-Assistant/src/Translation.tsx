@@ -1,26 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-function Translation( { germanText } : { germanText:string } ) {
+type TranslationProps = {
+    germanText: string,
+    englishTranslation: string
+}
+
+function Translation( { germanText, englishTranslation } : TranslationProps ) {
+
     const [isOnGermanTranslation, setIsOnGermanTranslation] = useState(true);
-    const [englishText, setEnglishText] = useState('');
-
-    useEffect(() => {
-        if(!(germanText)){
-            // Error message (how should we handle it ?)
-            return;
-        }
-
-        // Translate from German to English 
-    //    const englishTranslation = translateToEnglish(germanText);
-     //   setEnglishText(englishText);
-
-    },[]);
-
     const handleTranslationChange = () => {
-        console.log('Changing translation button');
         setIsOnGermanTranslation(currentLanguage => !currentLanguage);
     };
 
@@ -52,7 +43,7 @@ function Translation( { germanText } : { germanText:string } ) {
                 label={isOnGermanTranslation ? 'German' : 'English'}
                 multiline
                 rows={4}
-                value={isOnGermanTranslation ? germanText : englishText}
+                value={isOnGermanTranslation ? germanText : englishTranslation}
                 slotProps={{
                     input: {
                         readOnly: true,
