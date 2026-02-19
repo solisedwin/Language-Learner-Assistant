@@ -12,6 +12,7 @@ import {request} from './AxiosUtil';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
+import Microphone from './Microphone.tsx';
 import Translation from './Translation.tsx';
 
 type MuiIconComponent = OverridableComponent<SvgIconTypeMap<{}, "svg">>;
@@ -106,7 +107,7 @@ function ScenarioSelector() {
                 <Button
                     variant="contained"
                     color='success'
-                    onClick={() => startRolePlay()}>
+                    onClick={startRolePlay}>
                         Start Roleplay
                 </Button>
             </Grid>
@@ -126,6 +127,7 @@ function ScenarioSelector() {
                 </Card>
         }   
 
+            <Microphone />
 
             <Translation 
                 {...languageTexts}
