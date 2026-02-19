@@ -1,38 +1,40 @@
 import Button from '@mui/material/Button';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Microphone() {
     // https://www.geeksforgeeks.org/javascript/how-to-record-and-play-audio-in-javascript/
-    const microphone = useRef<HTMLAudioElement> (null);
-    let mediaRecorder : MediaRecorder;
-    let dataArray : BlobPart[] = []; 
-
+    const microphoneRef = useRef<HTMLAudioElement> (null);
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef<MediaRecorder>(null);
+    const [dataArray, setDataArray] = useState<BlobPart[]>([]);
+  
     const setAudioMicrophoneRecording = () => {
         let audioIN = { audio: true };
         navigator.mediaDevices.getUserMedia(audioIN)
             .then( mediaStreamObj => {
-                if ("srcObject" in microphone) {
-                    microphone.srcObject = mediaStreamObj;
+                if ('srcObject' in microphoneRef) {
+                    microphoneRef.srcObject = mediaStreamObj;
                 }
-                mediaRecorder = new MediaRecorder(mediaStreamObj);
+                mediaRecorderRef.current = new MediaRecorder(mediaStreamObj);
 
-                 // If audio data available then push 
-                // it to the chunk array
-        mediaRecorder.ondataavailable = function (ev) {
+        // If audio data available then push 
+        // it to the chunk array
+        mediaRecorderRef.current.ondataavailable = function (ev) {
           dataArray.push(ev.data);
         }
 
-        mediaRecorder.onstop = function (ev) {
+        mediaRecorderRef.current.onstop = () => {
           // blob of type mp3
           let audioData = new Blob(dataArray, { 'type': 'audio/mp3;' });
-          
-          dataArray = [];
+
+          setDataArray([]);
   
           let audioSrc = window.URL.createObjectURL(audioData);
-          if(microphone.current){
-              microphone.current.src = audioSrc;
-             microphone.current.play();
+          if(microphoneRef.current){
+              microphoneRef.current.src = audioSrc;
+             microphoneRef.current.play();
           }
         }
       })
@@ -40,12 +42,14 @@ function Microphone() {
 
     const startAudioRecording = () => {
         console.log('Start audio recording');
-        mediaRecorder.start();
+        mediaRecorderRef.current?.start();
+        setIsRecording(true);
     }
 
     const stopAudioRecording = () => {
-        mediaRecorder.stop();
         console.log('Stop audio recording');
+        mediaRecorderRef.current?.stop();
+        setIsRecording(false);
     }
 
     useEffect( () => {
@@ -55,14 +59,14 @@ function Microphone() {
     return (   
         <div>
             <audio
-                ref={microphone}
+                ref={microphoneRef}
                 controls
             >
             </audio>
 
             <Button
                 variant="outlined" 
-                startIcon={<RadioButtonCheckedIcon />}
+                startIcon={ isRecording ?  <CircularProgress />  :   <RadioButtonCheckedIcon />}
                 onClick= {startAudioRecording} 
             >
                 Record
