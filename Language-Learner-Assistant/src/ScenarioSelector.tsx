@@ -5,7 +5,7 @@ import HotelIcon from '@mui/icons-material/Hotel';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ToggleButton, type SvgIconTypeMap } from '@mui/material';
 import type { RoleplayScenario } from '../backend/scenarios/types.ts';
 import {request} from './AxiosUtil';
@@ -23,16 +23,19 @@ type RoleplayScenarioButtons = {
     color:  FabProps['color'],
 }
 
+type LanguageTexts = {
+    germanText: '',
+    englishTranslation: ''
+}
+
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
-    const [showAudioPlayer, setShowAudioPlayer] = useState(false);
-    const [languageTexts , setLanguageTexts] = useState({
+    const [languageTexts , setLanguageTexts] = useState<LanguageTexts>({
         germanText: '',
         englishTranslation: ''
     });
-  
+    const AIAudioSpeechRef = useRef<HTMLAudioElement>(null)
     const [audioSource, setAudioSource] = useState('');
-
     const roleplayScenarioOptions : RoleplayScenarioButtons[]  = [
         {
             scenario: 'Supermarket',
@@ -51,6 +54,10 @@ function ScenarioSelector() {
             
         }];
 
+    useEffect(() => {
+        AIAudioSpeechRef.current?.play();
+    }, [audioSource]);
+
     const startRolePlay = () => {
         request({
             method: 'POST',
@@ -60,16 +67,13 @@ function ScenarioSelector() {
             },
         }).then(response => {
             if('data' in response) {
-                const germanText = response.data.text ?? '';
-                const englishTranslation = response.data.translation ?? '';
-                
+                const {text : germanText, translation : englishTranslation, audioURLSrc} = response.data;
+
                 setLanguageTexts({
                     germanText: germanText,
                     englishTranslation: englishTranslation
                 });
-              
-                setAudioSource(response.data.audioURLSrc);
-                setShowAudioPlayer(true);
+                setAudioSource(audioURLSrc);
             }
         }).catch(error => {
             console.log(error)
@@ -114,19 +118,19 @@ function ScenarioSelector() {
 
             </Grid>
             </ToggleButtonGroup>
+            
 
-          { showAudioPlayer && 
-                <Card sx={{maxWidth: 300}}>
-                    <CardMedia
-                        sx={{height:40}}
-                        component="audio"
-                        controls
-                        src={audioSource}
-                    >
-                    </CardMedia>
-                </Card>
-        }   
-
+          { audioSource && 
+            <Card sx={{maxWidth: 300}}>
+                <CardMedia
+                    sx={{height:40}}
+                    component="audio"
+                    src={audioSource}
+                    ref={AIAudioSpeechRef}
+                >
+                </CardMedia>
+            </Card>
+        }
             <Microphone />
 
             <Translation 
