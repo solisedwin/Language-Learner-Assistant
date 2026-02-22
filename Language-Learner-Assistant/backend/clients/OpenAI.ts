@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 
 export class OpenAIClient {
    private openAI: OpenAI
+   private currentResponseID : string | null = null;
    constructor() {
       const secretKey = process.env.OPENAI_SECRET_KEY || '';
       if(!(secretKey)){
@@ -15,11 +16,13 @@ export class OpenAIClient {
    public async generateTextResponse(text:string) : Promise<string> {
       const response = await this.openAI.responses.create({
                   model: 'gpt-4o-mini',
+                  previous_response_id : this.currentResponseID,
                   input: [{
                       role: 'system',
-                      content: text
+                      content: text,
                   }]
               });
+        this.currentResponseID = response.id;
       return response.output_text;
    }
 
