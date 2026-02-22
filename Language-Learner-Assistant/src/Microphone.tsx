@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import StopIcon from '@mui/icons-material/Stop';
 import { useEffect, useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -26,12 +27,10 @@ function Microphone() {
         }
 
         mediaRecorderRef.current.onstop = () => {
-          // blob of type mp3
           let audioData = new Blob(dataArray, { 'type': 'audio/mp3;' });
-
           setDataArray([]);
-  
           let audioSrc = window.URL.createObjectURL(audioData);
+          
           if(microphoneRef.current){
               microphoneRef.current.src = audioSrc;
              microphoneRef.current.play();
@@ -40,16 +39,23 @@ function Microphone() {
       })
     }
 
+    const audioRecodingActions = () => {
+        if(!(isRecording)){
+            startAudioRecording();
+        } else{
+            stopAudioRecording();
+        }
+        setIsRecording(isRecording => !isRecording);
+    }
+
     const startAudioRecording = () => {
         console.log('Start audio recording');
         mediaRecorderRef.current?.start();
-        setIsRecording(true);
     }
 
     const stopAudioRecording = () => {
         console.log('Stop audio recording');
         mediaRecorderRef.current?.stop();
-        setIsRecording(false);
     }
 
     useEffect( () => {
@@ -66,20 +72,13 @@ function Microphone() {
 
             <Button
                 variant="outlined" 
-                startIcon={ isRecording ?  <CircularProgress />  :   <RadioButtonCheckedIcon />}
-                onClick= {startAudioRecording} 
+                startIcon={ isRecording ?  <StopIcon />  :   <RadioButtonCheckedIcon />}
+                onClick= {audioRecodingActions} 
             >
-                Record
+              {isRecording ? 'Stop' : 'Record' }  
             </Button>
 
-            <Button
-                variant="outlined" 
-                startIcon={<RadioButtonCheckedIcon />}
-                onClick= {stopAudioRecording} 
-            >
-                Stop Recording
-            </Button>
-
+           
         </div>
     )
 }
