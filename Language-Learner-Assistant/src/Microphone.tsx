@@ -15,7 +15,7 @@ function Microphone() {
 
             <Button
                 variant="outlined" 
-                startIcon={ isRecording ?  <StopIcon />  :   <RadioButtonCheckedIcon />}
+                startIcon={ isRecording ?  <StopIcon /> : <RadioButtonCheckedIcon />}
                 onClick= {audioRecordingActions} 
             >
               {isRecording ? 'Stop' : 'Record' }  

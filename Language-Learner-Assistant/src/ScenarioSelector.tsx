@@ -1,3 +1,5 @@
+import LoadingIndicator from './LoadingIndicator.tsx';
+import { useLoading } from './hooks/useLoading.ts';
 import Fab, { type FabProps } from '@mui/material/Fab';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import TrainIcon from '@mui/icons-material/Train';
@@ -34,8 +36,9 @@ function ScenarioSelector() {
         germanText: '',
         englishTranslation: ''
     });
-    const AIAudioSpeechRef = useRef<HTMLAudioElement>(null)
     const [audioSource, setAudioSource] = useState('');
+
+    const AIAudioSpeechRef = useRef<HTMLAudioElement>(null)
     const roleplayScenarioOptions : RoleplayScenarioButtons[]  = [
         {
             scenario: 'Supermarket',
@@ -58,7 +61,10 @@ function ScenarioSelector() {
         AIAudioSpeechRef.current?.play();
     }, [audioSource]);
 
+    const {isLoading, start, stop} = useLoading();
+
     const startRolePlay = () => {
+        start();
         request({
             method: 'POST',
             url: '/converse',
@@ -68,7 +74,6 @@ function ScenarioSelector() {
         }).then(response => {
             if('data' in response) {
                 const {text : germanText, translation : englishTranslation, audioURLSrc} = response.data;
-
                 setLanguageTexts({
                     germanText: germanText,
                     englishTranslation: englishTranslation
@@ -76,9 +81,10 @@ function ScenarioSelector() {
                 setAudioSource(audioURLSrc);
             }
         }).catch(error => {
-            console.log(error)
-        })
+            console.log(error);
+        }).finally(() => stop());
     };
+
     return (
         <div>
             Current Roleplay scenario: {roleplayScenario}
@@ -118,7 +124,9 @@ function ScenarioSelector() {
 
             </Grid>
             </ToggleButtonGroup>
-            
+
+            {isLoading && <LoadingIndicator /> }
+
 
           { audioSource && 
             <Card sx={{maxWidth: 300}}>
