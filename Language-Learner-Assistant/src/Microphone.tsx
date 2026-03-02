@@ -1,21 +1,13 @@
 import Button from '@mui/material/Button';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import StopIcon from '@mui/icons-material/Stop';
-import { useAudioMicRecorder } from './hooks/useAudioMicRecorder';
 import { useSpeechRecongnition } from './hooks/useSpeechRecognition';
 
 function Microphone() {
-  //const {isRecording, microphoneRef, audioRecordingActions} = useAudioMicRecorder();
-  const { isRecordingSpeech, speechRecognitionStart, speechRecognitionEnd } = useSpeechRecongnition();
+  const { isRecordingSpeech, speechTranscript, speechRecognitionStart, speechRecognitionEnd } = useSpeechRecongnition();
     
   return (   
         <div>
-            <audio
-              //  ref={microphoneRef}
-                controls
-            >
-            </audio>
-
             <Button
                 variant="outlined" 
                 startIcon={ isRecordingSpeech ?  <StopIcon /> : <RadioButtonCheckedIcon />}
@@ -23,9 +15,6 @@ function Microphone() {
             >
               {isRecordingSpeech ? 'Stop' : 'Record' }  
             </Button>
-
-           
-
         </div>
     )
 }

@@ -9,7 +9,6 @@ type TranslationProps = {
 }
 
 function Translation( { germanText, englishTranslation } : TranslationProps ) {
-
     const [isOnGermanTranslation, setIsOnGermanTranslation] = useState(true);
     const handleTranslationChange = () => {
         setIsOnGermanTranslation(currentLanguage => !currentLanguage);

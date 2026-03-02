@@ -3,12 +3,12 @@ import {useState} from 'react';
 
 export function useLoading() {
     const [isLoading, setIsLoading] = useState(false);
-    const start = () => setIsLoading(true);
-    const stop = () => setIsLoading(false);
+    const startRequest = () => setIsLoading(true);
+    const stopRequest = () => setIsLoading(false);
 
     return {
         isLoading,
-        start,
-        stop
+        startRequest,
+        stopRequest
     }
 }

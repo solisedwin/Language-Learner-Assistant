@@ -1,7 +1,7 @@
 
 import { OpenAIClient } from '../clients/OpenAI.ts';
-import type {RoleplayScenario}  from '../scenarios/types.ts';
-import Scenario from './../scenarios/Scenario.ts'
+import type { RoleplayScenario } from '@shared/types/RoleplayScenario';
+import Scenario from './../scenarios/Scenario.ts';
 import { ScenarioFactory } from '../scenarios/ScenarioFactory.ts';
 
 export class ConversationsService {

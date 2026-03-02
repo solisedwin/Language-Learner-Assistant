@@ -2,6 +2,7 @@ import { useEffect, useState, useRef} from "react";
 
 export function useSpeechRecongnition () {
     const [isRecordingSpeech, setIsRecordingSpeech] = useState(false);
+    const [speechTranscript, setSpeechTranscript] = useState('');
     const SpeechRecognitionConstructor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
     const speechRecognitionRef = useRef<InstanceType<typeof SpeechRecognitionConstructor> | null>(null);
 
@@ -18,21 +19,23 @@ export function useSpeechRecongnition () {
         
         speechRecognitionRef.current.lang = "de-DE"; // German language
         speechRecognitionRef.current.interimResults = false;     
-        speechRecognitionRef.current.maxAlternatives = 1;        
+        speechRecognitionRef.current.maxAlternatives = 1;       
+
         speechRecognitionRef.current.onresult = (event:SpeechRecognitionEvent) => {
-            console.log('On result: ', event);
-        // const transcript = event.results[0][0].transcript;
-        // console.log("Result:", transcript);
+            const transcript = event.results[0][0]?.transcript;
+            console.log('Transcript: ', transcript);
+            setSpeechTranscript(transcript);
         };
+
         speechRecognitionRef.current.onend = () => {
             console.log("Recognition ended.");
         };
+
         speechRecognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
             console.error("Recognition error:", event.error);
         };
     };
 
-  
     const speechRecognitionStart = () => {
         if (!speechRecognitionRef.current) return;
         setIsRecordingSpeech(true);
@@ -46,6 +49,7 @@ export function useSpeechRecongnition () {
 
     return {
         isRecordingSpeech,
+        speechTranscript,
         speechRecognitionStart,
         speechRecognitionEnd
     }

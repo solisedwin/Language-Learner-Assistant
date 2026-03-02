@@ -9,10 +9,8 @@ import Button from '@mui/material/Button';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useEffect, useRef, useState } from 'react';
 import { ToggleButton, type SvgIconTypeMap } from '@mui/material';
-import type { RoleplayScenario } from '../backend/scenarios/types.ts';
-import {request} from './AxiosUtil';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
+import type { RoleplayScenario } from './../shared/types/RoleplayScenario.ts';
+import { startConversation } from './api/features/Conversation/Conversation.ts';
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
 import Microphone from './Microphone.tsx';
 import Translation from './Translation.tsx';
@@ -26,8 +24,8 @@ type RoleplayScenarioButtons = {
 }
 
 type LanguageTexts = {
-    germanText: '',
-    englishTranslation: ''
+    germanText: string,
+    englishTranslation: string
 }
 
 function ScenarioSelector() {
@@ -57,32 +55,28 @@ function ScenarioSelector() {
             
         }];
 
-    useEffect(() => {
-        AIAudioSpeechRef.current?.play();
-    }, [audioSource]);
+    const {isLoading, startRequest, stopRequest} = useLoading();
 
-    const {isLoading, start, stop} = useLoading();
+    const startRolePlay = async () => {
+        startRequest();
+        try{
+            const {germanText, englishTranslation, audioURLSrc} = await startConversation(roleplayScenario);
+            setLanguageTexts({
+                germanText:germanText,
+                englishTranslation: englishTranslation
+            });
 
-    const startRolePlay = () => {
-        start();
-        request({
-            method: 'POST',
-            url: '/converse',
-            data: {
-                scenario: roleplayScenario
-            },
-        }).then(response => {
-            if('data' in response) {
-                const {text : germanText, translation : englishTranslation, audioURLSrc} = response.data;
-                setLanguageTexts({
-                    germanText: germanText,
-                    englishTranslation: englishTranslation
-                });
+            if(audioURLSrc){
                 setAudioSource(audioURLSrc);
+                AIAudioSpeechRef.current?.play();
             }
-        }).catch(error => {
-            console.log(error);
-        }).finally(() => stop());
+        }
+        catch(error){
+            console.error('Error: ', error);
+        } 
+        finally{
+            stopRequest();
+        }
     };
 
     return (
@@ -128,17 +122,19 @@ function ScenarioSelector() {
             {isLoading && <LoadingIndicator /> }
 
 
-          { audioSource && 
-            <Card sx={{maxWidth: 300}}>
-                <CardMedia
-                    sx={{height:40}}
-                    component="audio"
-                    src={audioSource}
-                    ref={AIAudioSpeechRef}
-                >
-                </CardMedia>
-            </Card>
-        }
+       {audioSource && (
+        <audio
+            ref={AIAudioSpeechRef}
+            src={audioSource}
+            controls
+        />
+        )}
+        <Button
+            onClick={() => AIAudioSpeechRef.current?.play()}
+        >
+        Play AI Audio Response
+        </Button>
+
             <Microphone />
 
             <Translation 
