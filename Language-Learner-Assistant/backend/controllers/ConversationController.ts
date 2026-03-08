@@ -19,10 +19,10 @@ export const startConversation = async (req: Request, res: Response) => {
     const audioBuffer = await audioService.textToSpeech(text);
     const tempAudioSpeechID =  await audioService.cacheAudioSpeech(audioBuffer);
     const audioURLSrc = `api/converse/audiospeech/${tempAudioSpeechID}`;
- 
+    
     res.json( {
-        text:text,
-        translation: translatedText,
+        germanText:text,
+        englishTranslation: translatedText,
         audioURLSrc: audioURLSrc
     });
 };

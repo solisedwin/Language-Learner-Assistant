@@ -61,6 +61,7 @@ function ScenarioSelector() {
         startRequest();
         try{
             const {germanText, englishTranslation, audioURLSrc} = await startConversation(roleplayScenario);
+            
             setLanguageTexts({
                 germanText:germanText,
                 englishTranslation: englishTranslation
