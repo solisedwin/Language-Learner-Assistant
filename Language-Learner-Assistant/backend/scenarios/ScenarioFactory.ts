@@ -1,6 +1,6 @@
-import type {RoleplayScenario} from './types.ts';
+import type {RoleplayScenario} from '@shared/types/RoleplayScenario'
 import Scenario from './Scenario.ts'
-import Hotel from './Hotel.ts';
+import Hotel from './Hotel.ts'
 import SuperMarket from './SuperMarket.ts'
 import TrainStation from './TrainStation.ts'
 
