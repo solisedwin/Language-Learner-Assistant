@@ -14,6 +14,7 @@ import { startConversation } from './api/features/Conversation/Conversation.ts';
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
 import Microphone from './Microphone.tsx';
 import Translation from './Translation.tsx';
+import type { AIConversationResponse } from '@shared/types/Conversation.ts';
 
 type MuiIconComponent = OverridableComponent<SvgIconTypeMap<{}, "svg">>;
 
@@ -60,7 +61,7 @@ function ScenarioSelector() {
     const startRolePlay = async () => {
         startRequest();
         try{
-            const {germanText, englishTranslation, audioURLSrc} = await startConversation(roleplayScenario);
+            const {germanText, englishTranslation, audioURLSrc} : AIConversationResponse  = await startConversation(roleplayScenario);
             
             setLanguageTexts({
                 germanText:germanText,
@@ -124,11 +125,11 @@ function ScenarioSelector() {
 
 
        {audioSource && (
-        <audio
-            ref={AIAudioSpeechRef}
-            src={audioSource}
-            controls
-        />
+            <audio
+                ref={AIAudioSpeechRef}
+                src={audioSource}
+                controls
+            />
         )}
         <Button
             onClick={() => AIAudioSpeechRef.current?.play()}

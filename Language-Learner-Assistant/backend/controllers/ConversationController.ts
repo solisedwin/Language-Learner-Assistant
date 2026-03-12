@@ -4,6 +4,7 @@ import { ConversationsService } from '../services/ConversationsService';
 import type {RoleplayScenario}  from '@shared/types/RoleplayScenario'
 import crypto from "crypto";
 import { TranslationService } from '../services/TranslationService.ts';
+import type {AIConversationResponse, AudioSpeechURL} from '@shared/types/Conversation.ts';
 
 const audioService  = new AudioService();
 const conversationService = new ConversationsService();
@@ -11,35 +12,38 @@ const translationService = new TranslationService();
 
 export const startConversation = async (req: Request, res: Response) => {
     const roleplayScenario : RoleplayScenario = req.body.scenario;
-    const text = await conversationService.startConversation(roleplayScenario);
-    let translatedText;
-    if(text){
-        translatedText = await translationService.translateToEnglish(text);
-    }
-    const audioBuffer = await audioService.textToSpeech(text);
-    const tempAudioSpeechID =  await audioService.cacheAudioSpeech(audioBuffer);
-    const audioURLSrc = `api/converse/audiospeech/${tempAudioSpeechID}`;
-    
-    res.json( {
-        germanText:text,
-        englishTranslation: translatedText,
-        audioURLSrc: audioURLSrc
-    });
+    const germanTextAIResponse = await conversationService.startConversation(roleplayScenario);
+    const conversationResponse : AIConversationResponse = await converse(germanTextAIResponse);
+    res.json(conversationResponse);
 };
 
 export const continueConverse = async (req: Request, res: Response) => {
     const germanText = req.body.germanText;
-}
+    const AIResponseText = await conversationService.continueConversation(germanText);
+    const conversationResponse : AIConversationResponse = await converse(AIResponseText);
+    res.json(conversationResponse);
+}   
+
+export const converse = async (germanTextAIResponse:string) : Promise<AIConversationResponse> =>  {
+    const translatedText = await translationService.translateToEnglish(germanTextAIResponse);
+    const audioBuffer = await audioService.textToSpeech(germanTextAIResponse);
+    const tempAudioSpeechID = await audioService.cacheAudioSpeech(audioBuffer);
+    const audioURLSrc : AudioSpeechURL = `api/converse/audiospeech/${tempAudioSpeechID}`;
+    
+    return {
+        germanText:germanTextAIResponse,
+        englishTranslation: translatedText,
+        audioURLSrc: audioURLSrc
+    };
+};
 
 export const getAudioSpeech = async (req: Request, res: Response) => {
     const audioSpeechID = req.params.id as crypto.UUID;
     const audioSpeechBuffer = await audioService.getCachedAudioSpeech(audioSpeechID);
-    
     res.set({
         "Content-Type": "audio/wav",
         "Content-Length": audioSpeechBuffer.length
     });
-
     res.send(audioSpeechBuffer);
 };
 
