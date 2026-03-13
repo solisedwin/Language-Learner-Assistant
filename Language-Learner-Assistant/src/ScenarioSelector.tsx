@@ -31,6 +31,8 @@ type LanguageTexts = {
 
 function ScenarioSelector() {
     const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>('Supermarket');
+    const [isShowingRoleplayOptionButtons, setIsShowingRoleplayOptionButtons] = useState(true);
+
     const [languageTexts , setLanguageTexts] = useState<LanguageTexts>({
         germanText: '',
         englishTranslation: ''
@@ -59,6 +61,7 @@ function ScenarioSelector() {
     const {isLoading, startRequest, stopRequest} = useLoading();
 
     const startRolePlay = async () => {
+        setIsShowingRoleplayOptionButtons(false);
         startRequest();
         try{
             const {germanText, englishTranslation, audioURLSrc} : AIConversationResponse  = await startConversation(roleplayScenario);
@@ -84,42 +87,45 @@ function ScenarioSelector() {
     return (
         <div>
             Current Roleplay scenario: {roleplayScenario}
-            <ToggleButtonGroup
-                value={roleplayScenario}
-                onChange={(_, roleplayScenario) => setRoleplayScenario(roleplayScenario)}
-                exclusive
-                aria-label='Roleplay Buttons'
-            >
+            { isShowingRoleplayOptionButtons && 
+                <ToggleButtonGroup
+                    value={roleplayScenario}
+                    onChange={(_, roleplayScenario) => setRoleplayScenario(roleplayScenario)}
+                    exclusive
+                    aria-label='Roleplay Buttons'
+                >
+            
                 <Grid container spacing={3}>
-            {
-                    roleplayScenarioOptions.map( ({scenario, icon : Icon, color}, _ ) => (
-                         <ToggleButton 
-                            key={scenario}
-                            value={scenario}
-                        >
-                            <Fab
-                                variant='extended'
-                                color={color}
-                                component='div'
-                            >
-                                <Icon sx={{ mr: 1 }} />
-                                {scenario}
-                            </Fab>
-                        </ToggleButton>
-                    ))
+                    {
+                            roleplayScenarioOptions.map( ({scenario, icon : Icon, color}, _ ) => (
+                                <ToggleButton 
+                                    key={scenario}
+                                    value={scenario}
+                                >
+                                    <Fab
+                                        variant='extended'
+                                        color={color}
+                                        component='div'
+                                    >
+                                        <Icon sx={{ mr: 1 }} />
+                                        {scenario}
+                                    </Fab>
+                                </ToggleButton>
+                            ))
+                    }
+
+                    <Grid size={12}>
+                        <Button
+                            variant="contained"
+                            color='success'
+                            onClick={startRolePlay}>
+                                Start Roleplay
+                        </Button>
+                    </Grid>
+                    </Grid>
+
+                </ToggleButtonGroup>
             }
-
-            <Grid size={12}>
-                <Button
-                    variant="contained"
-                    color='success'
-                    onClick={startRolePlay}>
-                        Start Roleplay
-                </Button>
-            </Grid>
-
-            </Grid>
-            </ToggleButtonGroup>
 
             {isLoading && <LoadingIndicator /> }
 

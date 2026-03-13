@@ -17,7 +17,7 @@ export class AudioService {
            if(!this.openAIClient){
                throw new Error('OpenAI Object instance is not set');
            }
-       }
+    }
     
     public async textToSpeech(text:string) : Promise<Buffer<ArrayBuffer>> {
         const audioSpeechResponse = await this.openAIClient.textToSpeech(text);
