@@ -1,18 +1,19 @@
 import OpenAI from 'openai';
 
 export class OpenAIClient {
-   private openAI: OpenAI
-   private currentResponseID : string | null = null;
-   constructor() {
-      const secretKey = process.env.OPENAI_SECRET_KEY || '';
-      if(!(secretKey)){
-         throw new Error('Invalid OpenAI API Key');
-      }
-      this.openAI = new OpenAI({
-          apiKey: secretKey
-      });
-   }
-   
+    
+    private openAI: OpenAI
+    private currentResponseID : string | null = null;
+    constructor() {
+        const secretKey = process.env.OPENAI_SECRET_KEY || '';
+        if(!(secretKey)){
+            throw new Error('Invalid OpenAI API Key');
+        }
+        this.openAI = new OpenAI({
+            apiKey: secretKey
+        });
+    }
+
    public async generateTextResponse(text:string) : Promise<string> {
       const response = await this.openAI.responses.create({
                   model: 'gpt-4o-mini',
@@ -24,6 +25,19 @@ export class OpenAIClient {
               });
         this.currentResponseID = response.id;
       return response.output_text;
+   }
+
+   public async continueConversation(continueConversationPrompt:string, germanText:string) : Promise<string> {
+    const response = await this.openAI.responses.create({
+                  model: 'gpt-4o-mini',
+                  previous_response_id : this.currentResponseID,
+                  input: [{
+                      role: 'system',
+                      content: continueConversationPrompt,
+                  }]
+              });
+        this.currentResponseID = response.id;
+    return response.output_text;
    }
 
    public async textToSpeech(text:string) : Promise<Buffer<ArrayBuffer>> {

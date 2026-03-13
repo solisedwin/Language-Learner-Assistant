@@ -26,7 +26,9 @@ export class ConversationsService {
     }
 
     public async continueConversation(germanText:string){
-        const responseText = await this.openAIClient.generateTextResponse(germanText);
+        const continueConversationPrompt = this.currentScenario.CONTINUE_CONVERSATION;
+        const responseText = await this.openAIClient.continueConversation(continueConversationPrompt, germanText);
+        console.log('Continue conversation text: ', responseText);
         return responseText;
     }
 

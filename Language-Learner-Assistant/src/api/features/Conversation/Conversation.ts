@@ -13,3 +13,14 @@ export const startConversation = async (scenario: RoleplayScenario) : Promise<Co
         });
     return response;
 }
+
+export const continueConversation = async (speechTranscript:string ) : Promise<ConversationResponse> =>  {
+    const response = await request<ConversationResponse>({
+            method: 'POST',
+            url: '/converse/continue-conversation',
+            data: {
+                speechTranscript: speechTranscript
+            },
+        });
+    return response;
+}

@@ -17,8 +17,8 @@ export const startConversation = async (req: Request, res: Response) => {
     res.json(conversationResponse);
 };
 
-export const continueConverse = async (req: Request, res: Response) => {
-    const germanText = req.body.germanText;
+export const continueConversation = async (req: Request, res: Response) => {
+    const germanText = req.body.speechTranscript;
     const AIResponseText = await conversationService.continueConversation(germanText);
     const conversationResponse : AIConversationResponse = await converse(AIResponseText);
     res.json(conversationResponse);
