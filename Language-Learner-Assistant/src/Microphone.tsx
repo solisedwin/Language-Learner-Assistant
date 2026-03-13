@@ -6,22 +6,19 @@ import { useEffect } from 'react';
 
 function Microphone() {
   const { isRecordingSpeech, speechTranscript, speechRecognitionStart, speechRecognitionEnd } = useSpeechRecongnition();
-/*
+
   useEffect(()=> {
-    if(speechTranscript){
-        
+    if(!isRecordingSpeech && speechTranscript !== '') {
+        console.log('~~ Transcript: ', speechTranscript);
     }
-
-  }, [speechTranscript]);
-*/
-
+  }, [isRecordingSpeech]);
 
   return (   
         <div>
             <Button
                 variant="outlined" 
                 startIcon={ isRecordingSpeech ?  <StopIcon /> : <RadioButtonCheckedIcon />}
-                onClick=  { (!isRecordingSpeech) ? speechRecognitionStart : speechRecognitionEnd} 
+                onClick= { (!isRecordingSpeech) ? speechRecognitionStart : speechRecognitionEnd} 
             >
               {isRecordingSpeech ? 'Stop' : 'Record' }  
             </Button>

@@ -23,12 +23,12 @@ export function useSpeechRecongnition () {
 
         speechRecognitionRef.current.onresult = (event:SpeechRecognitionEvent) => {
             const transcript = event.results[0][0]?.transcript;
-            console.log('Transcript: ', transcript);
             setSpeechTranscript(transcript);
         };
 
         speechRecognitionRef.current.onend = () => {
             console.log("Recognition ended.");
+            speechRecognitionEnd();
         };
 
         speechRecognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -36,15 +36,16 @@ export function useSpeechRecongnition () {
         };
     };
 
+    const speechRecognitionEnd = () => {
+        speechRecognitionRef.current?.stop();
+        setIsRecordingSpeech(false);
+    }
+
     const speechRecognitionStart = () => {
         if (!speechRecognitionRef.current) return;
         setIsRecordingSpeech(true);
+        setSpeechTranscript('');
         speechRecognitionRef.current?.start();
-    }
-
-    const speechRecognitionEnd = () => {
-        setIsRecordingSpeech(false);
-        speechRecognitionRef.current?.stop();
     }
 
     return {
