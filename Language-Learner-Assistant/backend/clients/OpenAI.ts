@@ -31,10 +31,16 @@ export class OpenAIClient {
     const response = await this.openAI.responses.create({
                   model: 'gpt-4o-mini',
                   previous_response_id : this.currentResponseID,
-                  input: [{
+                  input: [
+                    {
                       role: 'system',
                       content: continueConversationPrompt,
-                  }]
+                    },
+                    {
+                      role: 'user',
+                      content: germanText,
+                    },
+                ]
               });
         this.currentResponseID = response.id;
     return response.output_text;
