@@ -4,7 +4,7 @@ import { ConversationsService } from '../services/ConversationsService';
 import type {RoleplayScenario}  from '@shared/types/RoleplayScenario'
 import crypto from "crypto";
 import { TranslationService } from '../services/TranslationService.ts';
-import type {AIConversationResponse, AudioSpeechURL} from '@shared/types/Conversation.ts';
+import type {AIConversationResponse, AIAudioURL} from '@shared/types/Conversation.ts';
 
 const audioService  = new AudioService();
 const conversationService = new ConversationsService();
@@ -28,7 +28,7 @@ export const converse = async (germanTextAIResponse:string) : Promise<AIConversa
     const translatedText = await translationService.translateToEnglish(germanTextAIResponse);
     const audioBuffer = await audioService.textToSpeech(germanTextAIResponse);
     const tempAudioSpeechID = await audioService.cacheAudioSpeech(audioBuffer);
-    const audioURLSrc : AudioSpeechURL = `api/converse/audiospeech/${tempAudioSpeechID}`;
+    const audioURLSrc : AIAudioURL = `api/converse/audiospeech/${tempAudioSpeechID}`;
     
     return {
         germanText:germanTextAIResponse,

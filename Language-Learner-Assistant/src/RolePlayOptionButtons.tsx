@@ -63,7 +63,6 @@ function RolePlayOptionButtons({onRolePlaySelection}: RolePlayOptionButtonsProps
                             </ToggleButton>
                         ))
                 }
-
             </Grid>
         </ToggleButtonGroup>
     )

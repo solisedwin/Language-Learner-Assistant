@@ -1,8 +1,9 @@
+export type AIAudioURL = `api/converse/audiospeech/${string}`;
 
-export type AudioSpeechURL = `api/converse/audiospeech/${string}`;
-
-export type AIConversationResponse = {
+export type LanguageTexts = {
     germanText: string,
-    englishTranslation: string,
-    audioURLSrc: AudioSpeechURL
+    englishTranslation: string
+}
+export type AIConversationResponse = LanguageTexts & {
+    audioURLSrc: AIAudioURL
 } 

@@ -1,10 +1,9 @@
-
-import  Roleplay  from "./RolePlay"
+import ScenarioSelector from "./ScenarioSelector"
 
 function App() {
   return (
     <>
-      <Roleplay />
+      <ScenarioSelector />
     </>
   )
 }

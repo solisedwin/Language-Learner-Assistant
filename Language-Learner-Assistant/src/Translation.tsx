@@ -2,18 +2,13 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import type {LanguageTexts} from '@shared/types/Conversation.ts';
 
-type TranslationProps = {
-    germanText: string,
-    englishTranslation: string
-}
-
-function Translation( { germanText, englishTranslation } : TranslationProps ) {
+function Translation( { germanText, englishTranslation } : LanguageTexts ) {
     const [isOnGermanTranslation, setIsOnGermanTranslation] = useState(true);
     const handleTranslationChange = () => {
         setIsOnGermanTranslation(currentLanguage => !currentLanguage);
     };
-
     return (
         <div> 
             <ToggleButtonGroup
