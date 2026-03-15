@@ -4,7 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "outDir": "dist",
-   //  "rootDir": "..",
+    //  "rootDir": "..",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -12,10 +12,10 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
-     "paths": {
+    "paths": {
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["**/*.ts","../shared/**/*.ts"],
+  "include": ["**/*.ts", "../shared/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

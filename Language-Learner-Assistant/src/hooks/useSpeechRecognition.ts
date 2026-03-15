@@ -1,60 +1,63 @@
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 
-export function useSpeechRecongnition () {
-    const [isRecordingSpeech, setIsRecordingSpeech] = useState(false);
-    const [speechTranscript, setSpeechTranscript] = useState('');
-    const SpeechRecognitionConstructor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-    const speechRecognitionRef = useRef<InstanceType<typeof SpeechRecognitionConstructor> | null>(null);
+export function useSpeechRecongnition() {
+  const [isRecordingSpeech, setIsRecordingSpeech] = useState(false);
+  const [speechTranscript, setSpeechTranscript] = useState("");
+  const SpeechRecognitionConstructor =
+    window.SpeechRecognition ?? window.webkitSpeechRecognition;
+  const speechRecognitionRef = useRef<InstanceType<
+    typeof SpeechRecognitionConstructor
+  > | null>(null);
 
-    useEffect(()=> {
-        setUpSpeechRecognition();
-    }, []);
+  useEffect(() => {
+    setUpSpeechRecognition();
+  }, []);
 
-    const setUpSpeechRecognition = () => {
-        // Use the Web Speech API (prefixed for Chrome/Safari)
-        const SpeechRecognitionConstructor = window.SpeechRecognition ??  window.webkitSpeechRecognition; // TODO: Return error if undefined (Browser doesnt supoort it)
-        if (!SpeechRecognitionConstructor) return;
-        
-        speechRecognitionRef.current = new SpeechRecognitionConstructor();
-        
-        speechRecognitionRef.current.lang = "de-DE"; // German language
-        speechRecognitionRef.current.interimResults = false;     
-        speechRecognitionRef.current.maxAlternatives = 1;       
+  const setUpSpeechRecognition = () => {
+    // Use the Web Speech API (prefixed for Chrome/Safari)
+    const SpeechRecognitionConstructor =
+      window.SpeechRecognition ?? window.webkitSpeechRecognition; // TODO: Return error if undefined (Browser doesnt supoort it)
+    if (!SpeechRecognitionConstructor) return;
 
-        speechRecognitionRef.current.onresult = (event:SpeechRecognitionEvent) => {
-            const transcript = event.results[0][0]?.transcript;
-            setSpeechTranscript(transcript);
-        };
+    speechRecognitionRef.current = new SpeechRecognitionConstructor();
 
-        speechRecognitionRef.current.onend = () => {
-            console.log("Recognition ended.");
-            speechRecognitionEnd();
-        };
+    speechRecognitionRef.current.lang = "de-DE"; // German language
+    speechRecognitionRef.current.interimResults = false;
+    speechRecognitionRef.current.maxAlternatives = 1;
 
-        speechRecognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
-            console.error("Recognition error:", event.error);
-        };
+    speechRecognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0][0]?.transcript;
+      setSpeechTranscript(transcript);
     };
 
-    const speechRecognitionEnd = () => {
-        speechRecognitionRef.current?.stop();
-        setIsRecordingSpeech(false);
-    }
+    speechRecognitionRef.current.onend = () => {
+      console.log("Recognition ended.");
+      speechRecognitionEnd();
+    };
 
-    const speechRecognitionStart = () => {
-        if (!speechRecognitionRef.current) return;
-        setIsRecordingSpeech(true);
-        setSpeechTranscript('');
-        speechRecognitionRef.current?.start();
-    }
+    speechRecognitionRef.current.onerror = (
+      event: SpeechRecognitionErrorEvent,
+    ) => {
+      console.error("Recognition error:", event.error);
+    };
+  };
 
-    return {
-        isRecordingSpeech,
-        speechTranscript,
-        speechRecognitionStart,
-        speechRecognitionEnd
-    }
+  const speechRecognitionEnd = () => {
+    speechRecognitionRef.current?.stop();
+    setIsRecordingSpeech(false);
+  };
 
+  const speechRecognitionStart = () => {
+    if (!speechRecognitionRef.current) return;
+    setIsRecordingSpeech(true);
+    setSpeechTranscript("");
+    speechRecognitionRef.current?.start();
+  };
+
+  return {
+    isRecordingSpeech,
+    speechTranscript,
+    speechRecognitionStart,
+    speechRecognitionEnd,
+  };
 }
-
- 

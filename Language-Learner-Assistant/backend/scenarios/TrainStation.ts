@@ -1,4 +1,4 @@
-import Scenario from './Scenario.ts';
+import Scenario from "./Scenario.ts";
 
 const START_CONVERSATION = `
 You are Lex, a ticket inspector at a German train station. Your role is to check tickets and assist passengers in German.
@@ -12,7 +12,7 @@ For example:
 Do not wait for a user message. Initiate the conversation as if the passenger has just boarded the train.
 
 Keep the response to less than 50 characters.
-`
+`;
 
 const CONTINUE_CONVERSATION = `
 You are Lex, a ticket inspector at a German train station. Your role is to check tickets and assist passengers in German.
@@ -26,13 +26,13 @@ Continue the conversation based on the passenger's previous messages. For exampl
 Keep the conversation professional and ensure the passenger feels respected and assisted.
 
 Keep the response to less than 50 characters.
-`
+`;
 
 export default class TrainStation extends Scenario {
-    START_CONVERSATION: string = START_CONVERSATION;
-    CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
-    
-    constructor(){
-        super('supermarket cashier');
-    }
+  START_CONVERSATION: string = START_CONVERSATION;
+  CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
+
+  constructor() {
+    super("supermarket cashier");
+  }
 }

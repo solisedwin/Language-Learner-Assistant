@@ -1,4 +1,4 @@
-import  Scenario  from './Scenario.ts';
+import Scenario from "./Scenario.ts";
 
 const START_CONVERSATION = `
 You are a friendly hotel receptionist. Your role is to assist customers in German.
@@ -29,10 +29,10 @@ Keep the response to less than 50 characters.
 `;
 
 export default class Hotel extends Scenario {
-    START_CONVERSATION: string = START_CONVERSATION;
-    CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
-    
-    constructor(){
-        super('hotel receptionist');
-    }
+  START_CONVERSATION: string = START_CONVERSATION;
+  CONTINUE_CONVERSATION: string = CONTINUE_CONVERSATION;
+
+  constructor() {
+    super("hotel receptionist");
+  }
 }

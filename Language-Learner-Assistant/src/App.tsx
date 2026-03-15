@@ -1,10 +1,10 @@
-import ScenarioSelector from "./ScenarioSelector"
+import ScenarioSelector from "./ScenarioSelector";
 
 function App() {
   return (
     <>
       <ScenarioSelector />
     </>
-  )
+  );
 }
-export default App
+export default App;
