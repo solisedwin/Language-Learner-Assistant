@@ -30,6 +30,7 @@ function Microphone({ onConversationReply }: MicrophoneProps) {
           audioURLSrc,
         }: AIConversationResponse =
           await continueConversation(speechTranscript);
+
         onConversationReply({
           germanText: germanText,
           englishTranslation: englishTranslation,
