@@ -3,21 +3,31 @@ import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import StopIcon from "@mui/icons-material/Stop";
 import { useSpeechRecongnition } from "./hooks/useSpeechRecognition";
 import { useEffect } from "react";
-
 import { continueConversation } from "./api/features/Conversation/Conversation";
 import type { AIConversationResponse } from "@shared/types/Conversation.ts";
 
 type MicrophoneProps = {
   onConversationReply: (conversationReply: AIConversationResponse) => void;
+  isRolePlayInProgress: boolean;
 };
 
-function Microphone({ onConversationReply }: MicrophoneProps) {
+function Microphone({
+  onConversationReply,
+  isRolePlayInProgress,
+}: MicrophoneProps) {
   const {
     isRecordingSpeech,
     speechTranscript,
     speechRecognitionStart,
     speechRecognitionEnd,
   } = useSpeechRecongnition();
+
+  useEffect(() => {
+    // Close Microphone from listening from the client
+    if (!isRolePlayInProgress) {
+      speechRecognitionEnd();
+    }
+  }, [isRolePlayInProgress]);
 
   useEffect(() => {
     if (!isRecordingSpeech && speechTranscript !== "") {

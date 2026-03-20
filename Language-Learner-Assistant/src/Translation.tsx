@@ -6,9 +6,11 @@ import type { LanguageTexts } from "@shared/types/Conversation.ts";
 
 function Translation({ germanText, englishTranslation }: LanguageTexts) {
   const [isOnGermanTranslation, setIsOnGermanTranslation] = useState(true);
+
   const handleTranslationChange = () => {
     setIsOnGermanTranslation((currentLanguage) => !currentLanguage);
   };
+
   return (
     <div>
       <ToggleButtonGroup

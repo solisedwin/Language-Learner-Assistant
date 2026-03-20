@@ -1,12 +1,23 @@
 import { useEffect, useRef } from "react";
 import type { AudioSpeechURL } from "@shared/types/Conversation.ts";
 
-function AISpeech({ audioURLSrc }: AudioSpeechURL) {
+type AISpeechProps = {
+  audioURLSrc: AudioSpeechURL;
+  isRolePlayInProgress: boolean;
+};
+
+function AISpeech({ audioURLSrc, isRolePlayInProgress }: AISpeechProps) {
   const AIAudioSpeechRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     AIAudioSpeechRef.current?.play();
   }, [audioURLSrc]);
+
+  useEffect(() => {
+    if (!isRolePlayInProgress) {
+      AIAudioSpeechRef.current?.pause();
+    }
+  }, [isRolePlayInProgress]);
 
   return (
     <>
