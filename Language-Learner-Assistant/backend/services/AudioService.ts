@@ -3,7 +3,7 @@ import crypto from "crypto";
 import dayjs from "dayjs";
 
 type AudioConfig = {
-  audioBuffer: Buffer<ArrayBuffer>;
+  audioBuffer: Buffer;
   expiresIn: string;
 };
 type AudioCache = Record<crypto.UUID, AudioConfig>;
@@ -19,27 +19,25 @@ export class AudioService {
     }
   }
 
-  public async textToSpeech(text: string): Promise<Buffer<ArrayBuffer>> {
+  public async textToSpeech(text: string): Promise<Buffer> {
     const audioSpeechResponse = await this.openAIClient.textToSpeech(text);
     return audioSpeechResponse;
   }
 
-  public cacheAudioSpeech(audioSpeech: Buffer<ArrayBuffer>): crypto.UUID {
+  public cacheAudioSpeech(audioSpeech: Buffer): crypto.UUID {
     const tempAudioUUID = crypto.randomUUID();
 
-    // Set expiration date 2 minutes from now
-    const twoMinutesFromNow = dayjs().utc().add(2, "minute").format();
+    // Set expiration date 5 minutes from now
+    const fiveMinutesFromNow = dayjs().utc().add(5, "minute").format();
 
     this.audioCache[tempAudioUUID] = {
       audioBuffer: audioSpeech,
-      expiresIn: twoMinutesFromNow,
+      expiresIn: fiveMinutesFromNow,
     };
     return tempAudioUUID;
   }
 
-  public async getCachedAudioSpeech(
-    audioID: crypto.UUID,
-  ): Promise<Buffer<ArrayBuffer>> {
+  public async getCachedAudioSpeech(audioID: crypto.UUID): Promise<Buffer> {
     if (!(audioID in this.audioCache)) {
       throw new Error("Audio ID does not exist");
     }
@@ -47,15 +45,15 @@ export class AudioService {
     const expirationDateTime = dayjs(expiresIn).utc();
 
     const currentUTCNow = dayjs().utc();
-    const isBeforeExpirationDate =
-      dayjs(currentUTCNow).isSameOrBefore(expirationDateTime);
+    const isBeforeExpirationDate = dayjs(currentUTCNow).isSameOrBefore(expirationDateTime);
 
     if (!isBeforeExpirationDate) {
+      delete this.audioCache[audioID];
       throw new Error("Cached audio is past expiration date");
     }
     const cachedAudioBuffer = this.audioCache[audioID].audioBuffer;
 
-    delete this.audioCache[audioID]; // Remove Audio Buffer from cache
+    // delete this.audioCache[audioID]; // Remove Audio Buffer from cache
     return cachedAudioBuffer;
   }
 }

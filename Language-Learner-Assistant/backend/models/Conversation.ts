@@ -13,7 +13,7 @@ export interface IConversation {
 export interface IConversationExchange {
   german: string;
   englishTranslation: string;
-  audioRef: Schema.Types.ObjectId;
+  germanAudioRef: Schema.Types.ObjectId;
 }
 const ConversationSchema = new Schema<IConversation>(
   {
@@ -28,20 +28,21 @@ const ConversationSchema = new Schema<IConversation>(
 const ConversationExchangeSchema = new Schema<IConversationExchange>({
   german: { type: String, required: true },
   englishTranslation: { type: String, required: true },
-  audioRef: { type: Schema.Types.ObjectId, ref: "Audio" },
+  germanAudioRef: { type: Schema.Types.ObjectId, ref: "Audio" },
 });
 
-const Audio = new Schema<IAudio>({
+export const AudioModel = new Schema<IAudio>({
   fileSource: { type: String, required: true },
   fileName: { type: String, required: true },
   createdAt: { type: Date },
 });
 
-const conversation = mongoose.model<IConversation>(
+export const ConversationModel = mongoose.model<IConversation>(
   "Conversation",
   ConversationSchema,
 );
-const conversationExchange = mongoose.model<IConversationExchange>(
-  " ConversationExchange",
+
+export const ConversationExchangeModel = mongoose.model<IConversationExchange>(
+  "ConversationExchange",
   ConversationExchangeSchema,
 );

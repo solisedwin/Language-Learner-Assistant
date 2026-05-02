@@ -1,7 +1,14 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import crypto from "crypto";
 
-export class AmazonS3Client {
-  private AmazonS3: S3Client;
+export class AmazonS3 {
+  private s3: S3Client;
 
   constructor() {
     const accessKey = process.env.AWS_S3_ACCESS_KEY;
@@ -12,7 +19,7 @@ export class AmazonS3Client {
       throw new Error("Keys are invalid for the Amazon S3 Service");
     }
 
-    this.AmazonS3 = new S3Client({
+    this.s3 = new S3Client({
       credentials: {
         accessKeyId: accessKey,
         secretAccessKey: secretKey,
@@ -21,10 +28,27 @@ export class AmazonS3Client {
     });
   }
 
-  public getAmazonS3Instance(): S3Client {
-    if (!this.AmazonS3) {
-      throw new Error("Amazon S3 Instance is not configured");
-    }
-    return this.AmazonS3;
+  public async getPreSignedUrl() {
+    const folder = "audio";
+    const fileName = this.generateRandomFileName();
+    const key = `${folder}/${fileName}`;
+
+    const params = {
+      Bucket: "language-learner-assistant",
+      Key: key,
+      ContentType: "audio/wav",
+    };
+
+    const putCommand = new PutObjectCommand(params);
+
+    const presignedUrl = await getSignedUrl(this.s3, putCommand, {
+      expiresIn: 300, // 5 Minutes
+    });
+    return presignedUrl;
+  }
+
+  private generateRandomFileName(): string {
+    const randomId = crypto.randomBytes(32).toString("hex");
+    return randomId;
   }
 }

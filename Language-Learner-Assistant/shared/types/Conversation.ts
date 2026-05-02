@@ -4,6 +4,6 @@ export type LanguageTexts = {
   germanText: string;
   englishTranslation: string;
 };
-export type AIConversationResponse = LanguageTexts & {
+export type ConversationExchange = LanguageTexts & {
   audioURLSrc: AIAudioURL;
 };

@@ -1,36 +1,36 @@
 import LoadingIndicator from "./LoadingIndicator.tsx";
 import { useLoading } from "./hooks/useLoading.ts";
 import Button from "@mui/material/Button";
-import { useState, useRef } from "react";
-import type { RoleplayScenario } from "./../shared/types/RoleplayScenario.ts";
-import { startConversation } from "./api/features/Conversation/Conversation.ts";
+import { useState } from "react";
+import type { RoleplayScenario } from "./../shared/types/RoleplayScenario";
+import {
+  audioUploadPermissions,
+  getGermanAudio,
+  startConversation,
+} from "./api/features/Conversation/Conversation";
 import RolePlayOptionButtons from "./RolePlayOptionButtons.tsx";
 import Microphone from "./Microphone.tsx";
 import Translation from "./Translation.tsx";
-import type { AIConversationResponse } from "@shared/types/Conversation.ts";
+import type { AIAudioURL, ConversationExchange } from "@shared/types/Conversation.ts";
 import AISpeech from "./AISpeech.tsx";
 import SaveTranslationButton from "./SaveTranslationButton.tsx";
 
 function ScenarioSelector() {
-  const [roleplayScenario, setRoleplayScenario] =
-    useState<RoleplayScenario>("Supermarket");
-  const [isShowingRoleplayOptionButtons, setIsShowingRoleplayOptionButtons] =
-    useState(true);
-  const [conversationReply, setConversationReply] =
-    useState<AIConversationResponse | null>(null);
+  const [roleplayScenario, setRoleplayScenario] = useState<RoleplayScenario>("Supermarket");
+  const [isShowingRoleplayOptionButtons, setIsShowingRoleplayOptionButtons] = useState(true);
+  const [conversationReply, setConversationReply] = useState<ConversationExchange | null>(null);
 
-  const translationDataRef = useRef<AIConversationResponse[]>([]);
+  const [preSignedUrl, setPreSignedUrl] = useState<string | null>(null);
+
   const [isRolePlayInProgress, setIsRolePlayInProgress] = useState(false);
 
   const startRolePlay = async () => {
     setIsShowingRoleplayOptionButtons(false);
     startRequest();
     try {
-      const {
-        germanText,
-        englishTranslation,
-        audioURLSrc,
-      }: AIConversationResponse = await startConversation(roleplayScenario);
+      const { germanText, englishTranslation, audioURLSrc }: ConversationExchange =
+        await startConversation(roleplayScenario);
+
       setIsRolePlayInProgress(true);
       setConversationReply({
         germanText: germanText,
@@ -44,12 +44,40 @@ function ScenarioSelector() {
     }
   };
 
-  const storeTranslationData = () => {
-    translationDataRef.current.push(conversationReply);
+  //TODO: Move this function to a shared/utility folder for Audio service
+  const parseAudioID = async (audioUrlSrc: AIAudioURL) => {
+    const id = audioUrlSrc.substring(audioUrlSrc.lastIndexOf("/") + 1);
+    return id;
+  };
+
+  const saveAudio = async () => {
+    try {
+      let url = preSignedUrl;
+      if (!preSignedUrl) {
+        url = await audioUploadPermissions();
+        setPreSignedUrl(url);
+      }
+      const audioId = await parseAudioID(conversationReply?.audioURLSrc);
+      const germanAudio = await getGermanAudio(audioId);
+      console.log("-- Pre Signed url we are about to use: ", url);
+      if (url) {
+        await fetch(url, {
+          method: "PUT",
+          body: germanAudio,
+          headers: {
+            "Content-Type": "audio/wav",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error on saving audio. ", error);
+    }
   };
 
   const stopRolePlay = () => {
     setIsRolePlayInProgress(false);
+    setConversationReply(null);
+    setIsShowingRoleplayOptionButtons(true);
   };
 
   const { isLoading, startRequest, stopRequest } = useLoading();
@@ -81,7 +109,7 @@ function ScenarioSelector() {
             isRolePlayInProgress={isRolePlayInProgress}
           />
 
-          <SaveTranslationButton onSave={storeTranslationData} />
+          <SaveTranslationButton onSave={saveAudio} />
           <Translation
             germanText={conversationReply.germanText}
             englishTranslation={conversationReply.englishTranslation}

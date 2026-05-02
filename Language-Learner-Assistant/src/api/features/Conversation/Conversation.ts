@@ -1,11 +1,11 @@
 import { request } from "./../../AxiosUtil.ts";
 import type { RoleplayScenario } from "@shared/types/RoleplayScenario";
-import type { ConversationResponse } from "./types.ts";
+import type { AIAudioURL, ConversationExchange } from "@shared/types/Conversation.ts";
 
 export const startConversation = async (
   scenario: RoleplayScenario,
-): Promise<ConversationResponse> => {
-  const response = await request<ConversationResponse>({
+): Promise<ConversationExchange> => {
+  const response = await request<ConversationExchange>({
     method: "POST",
     url: "/converse",
     data: {
@@ -17,13 +17,30 @@ export const startConversation = async (
 
 export const continueConversation = async (
   speechTranscript: string,
-): Promise<ConversationResponse> => {
-  const response = await request<ConversationResponse>({
+): Promise<ConversationExchange> => {
+  const response = await request<ConversationExchange>({
     method: "POST",
     url: "/converse/continue-conversation",
     data: {
       speechTranscript: speechTranscript,
     },
+  });
+  return response;
+};
+
+export const getGermanAudio = async (audioID: string): Promise<ArrayBuffer> => {
+  const response = await request<ArrayBuffer>({
+    method: "GET",
+    url: `/converse/audiospeech/${audioID}`,
+    responseType: "arraybuffer",
+  });
+  return response;
+};
+
+export const audioUploadPermissions = async (): Promise<string | null> => {
+  const response = await request<string | null>({
+    method: "POST",
+    url: "converse/audioUploadPermissions",
   });
   return response;
 };

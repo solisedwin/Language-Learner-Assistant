@@ -9,9 +9,7 @@ const client = axios.create({
 });
 
 // Generic request function
-export const request = async <T = any>(
-  options: AxiosRequestConfig,
-): Promise<T> => {
+export const request = async <T = any>(options: AxiosRequestConfig): Promise<T> => {
   try {
     const response: AxiosResponse<T> = await client(options);
     if ("data" in response) {
