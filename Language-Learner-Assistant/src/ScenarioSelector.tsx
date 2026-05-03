@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { RoleplayScenario } from "./../shared/types/RoleplayScenario";
 import {
   audioUploadPermissions,
-  getGermanAudio,
+  getAudio,
   startConversation,
 } from "./api/features/Conversation/Conversation";
 import RolePlayOptionButtons from "./RolePlayOptionButtons.tsx";
@@ -28,12 +28,12 @@ function ScenarioSelector() {
     setIsShowingRoleplayOptionButtons(false);
     startRequest();
     try {
-      const { germanText, englishTranslation, audioURLSrc }: ConversationExchange =
+      const { languageText, englishTranslation, audioURLSrc }: ConversationExchange =
         await startConversation(roleplayScenario);
 
       setIsRolePlayInProgress(true);
       setConversationReply({
-        germanText: germanText,
+        languageText: languageText,
         englishTranslation: englishTranslation,
         audioURLSrc: audioURLSrc,
       });
@@ -58,12 +58,12 @@ function ScenarioSelector() {
         setPreSignedUrl(url);
       }
       const audioId = await parseAudioID(conversationReply?.audioURLSrc);
-      const germanAudio = await getGermanAudio(audioId);
+      const audio = await getAudio(audioId);
       console.log("-- Pre Signed url we are about to use: ", url);
       if (url) {
         await fetch(url, {
           method: "PUT",
-          body: germanAudio,
+          body: audio,
           headers: {
             "Content-Type": "audio/wav",
           },
@@ -111,7 +111,7 @@ function ScenarioSelector() {
 
           <SaveTranslationButton onSave={saveAudio} />
           <Translation
-            germanText={conversationReply.germanText}
+            languageText={conversationReply.languageText}
             englishTranslation={conversationReply.englishTranslation}
           />
         </>

@@ -4,17 +4,17 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import type { LanguageTexts } from "@shared/types/Conversation.ts";
 
-function Translation({ germanText, englishTranslation }: LanguageTexts) {
-  const [isOnGermanTranslation, setIsOnGermanTranslation] = useState(true);
+function Translation({ languageText, englishTranslation }: LanguageTexts) {
+  const [isOnEnglishTranslation, setisOnEnglishTranslation] = useState(false);
 
   const handleTranslationChange = () => {
-    setIsOnGermanTranslation((currentLanguage) => !currentLanguage);
+    setisOnEnglishTranslation((isOnEnglishTranslation) => !isOnEnglishTranslation);
   };
 
   return (
     <div>
       <ToggleButtonGroup
-        value={isOnGermanTranslation}
+        value={isOnEnglishTranslation}
         exclusive
         onChange={handleTranslationChange}
         aria-label="TranslationButtons"
@@ -29,10 +29,10 @@ function Translation({ germanText, englishTranslation }: LanguageTexts) {
 
       <TextField
         id="translation-box"
-        label={isOnGermanTranslation ? "German" : "English"}
+        label={isOnEnglishTranslation ? "German" : "English"}
         multiline
         rows={4}
-        value={isOnGermanTranslation ? germanText : englishTranslation}
+        value={isOnEnglishTranslation ? languageText : englishTranslation}
         slotProps={{
           input: {
             readOnly: true,

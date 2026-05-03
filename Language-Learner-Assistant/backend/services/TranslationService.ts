@@ -9,8 +9,8 @@ export class TranslationService {
     }
   }
 
-  public async translateToEnglish(germanText: string): Promise<string> {
-    const translateText = await this.deeplClient.translateToEnglish(germanText);
-    return translateText;
+  public async translateToEnglish(languageText: string): Promise<string> {
+    const translatedText = await this.deeplClient.translateToEnglish(languageText);
+    return translatedText;
   }
 }

@@ -3,11 +3,10 @@ import { useEffect, useState, useRef } from "react";
 export function useSpeechRecongnition() {
   const [isRecordingSpeech, setIsRecordingSpeech] = useState(false);
   const [speechTranscript, setSpeechTranscript] = useState("");
-  const SpeechRecognitionConstructor =
-    window.SpeechRecognition ?? window.webkitSpeechRecognition;
-  const speechRecognitionRef = useRef<InstanceType<
-    typeof SpeechRecognitionConstructor
-  > | null>(null);
+  const SpeechRecognitionConstructor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
+  const speechRecognitionRef = useRef<InstanceType<typeof SpeechRecognitionConstructor> | null>(
+    null,
+  );
 
   useEffect(() => {
     setUpSpeechRecognition();
@@ -15,8 +14,7 @@ export function useSpeechRecongnition() {
 
   const setUpSpeechRecognition = () => {
     // Use the Web Speech API (prefixed for Chrome/Safari)
-    const SpeechRecognitionConstructor =
-      window.SpeechRecognition ?? window.webkitSpeechRecognition; // TODO: Return error if undefined (Browser doesnt supoort it)
+    const SpeechRecognitionConstructor = window.SpeechRecognition ?? window.webkitSpeechRecognition; // TODO: Return error if undefined (Browser doesnt supoort it)
     if (!SpeechRecognitionConstructor) return;
 
     speechRecognitionRef.current = new SpeechRecognitionConstructor();
@@ -35,9 +33,7 @@ export function useSpeechRecongnition() {
       speechRecognitionEnd();
     };
 
-    speechRecognitionRef.current.onerror = (
-      event: SpeechRecognitionErrorEvent,
-    ) => {
+    speechRecognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error("Recognition error:", event.error);
     };
   };

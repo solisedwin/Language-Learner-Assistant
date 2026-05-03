@@ -28,7 +28,7 @@ export const continueConversation = async (
   return response;
 };
 
-export const getGermanAudio = async (audioID: string): Promise<ArrayBuffer> => {
+export const getAudio = async (audioID: string): Promise<ArrayBuffer> => {
   const response = await request<ArrayBuffer>({
     method: "GET",
     url: `/converse/audiospeech/${audioID}`,

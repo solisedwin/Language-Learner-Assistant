@@ -11,9 +11,9 @@ export interface IConversation {
   conversationExchanges: IConversationExchange[];
 }
 export interface IConversationExchange {
-  german: string;
+  languageText: string;
   englishTranslation: string;
-  germanAudioRef: Schema.Types.ObjectId;
+  languageAudioRef: Schema.Types.ObjectId;
 }
 const ConversationSchema = new Schema<IConversation>(
   {
@@ -26,9 +26,9 @@ const ConversationSchema = new Schema<IConversation>(
 );
 
 const ConversationExchangeSchema = new Schema<IConversationExchange>({
-  german: { type: String, required: true },
+  languageText: { type: String, required: true },
   englishTranslation: { type: String, required: true },
-  germanAudioRef: { type: Schema.Types.ObjectId, ref: "Audio" },
+  languageAudioRef: { type: Schema.Types.ObjectId, ref: "Audio" },
 });
 
 export const AudioModel = new Schema<IAudio>({
@@ -37,10 +37,7 @@ export const AudioModel = new Schema<IAudio>({
   createdAt: { type: Date },
 });
 
-export const ConversationModel = mongoose.model<IConversation>(
-  "Conversation",
-  ConversationSchema,
-);
+export const ConversationModel = mongoose.model<IConversation>("Conversation", ConversationSchema);
 
 export const ConversationExchangeModel = mongoose.model<IConversationExchange>(
   "ConversationExchange",

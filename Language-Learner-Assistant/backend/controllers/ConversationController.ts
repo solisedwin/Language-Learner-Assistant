@@ -12,27 +12,27 @@ const translationService = new TranslationService();
 
 export const startConversation = async (req: Request, res: Response) => {
   const roleplayScenario: RoleplayScenario = req.body.scenario;
-  const germanTextAIResponse = await conversationService.startConversation(roleplayScenario);
-  const conversationResponse: ConversationExchange = await converse(germanTextAIResponse);
+  const AI_responseText = await conversationService.startConversation(roleplayScenario);
+  const conversationResponse: ConversationExchange = await converse(AI_responseText);
   res.json(conversationResponse);
 };
 
 export const continueConversation = async (req: Request, res: Response) => {
-  const germanTextResponse = req.body.speechTranscript;
-  const AIResponseText = await conversationService.continueConversation(germanTextResponse);
+  const transcript = req.body.speechTranscript;
+  const AIResponseText = await conversationService.continueConversation(transcript);
   const conversationResponse: ConversationExchange = await converse(AIResponseText);
   res.json(conversationResponse);
 };
 
-export const converse = async (germanTextAIResponse: string): Promise<ConversationExchange> => {
-  const translatedText = await translationService.translateToEnglish(germanTextAIResponse);
-  const audioBuffer = await audioService.textToSpeech(germanTextAIResponse);
+export const converse = async (AI_responseText: string): Promise<ConversationExchange> => {
+  const translatedText = await translationService.translateToEnglish(AI_responseText);
+  const audioBuffer = await audioService.textToSpeech(AI_responseText);
   const tempAudioSpeechID = await audioService.cacheAudioSpeech(audioBuffer);
   const audioURLSrc: AIAudioURL = `api/converse/audiospeech/${tempAudioSpeechID}`;
 
   // TODO: Use res.json instead
   return {
-    germanText: germanTextAIResponse,
+    text: AI_responseText,
     englishTranslation: translatedText,
     audioURLSrc: audioURLSrc,
   };

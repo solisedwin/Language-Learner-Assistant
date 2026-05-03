@@ -13,9 +13,9 @@ export class DeepL {
     this.deeplClient = new deepl.DeepLClient(apiKey);
   }
 
-  public async translateToEnglish(germanText: string): Promise<string> {
+  public async translateToEnglish(text: string): Promise<string> {
     const translatedText = await this.deeplClient
-      .translateText(germanText, this.sourceLang, this.targetLang)
+      .translateText(text, this.sourceLang, this.targetLang)
       .then((data) => data.text);
 
     return translatedText;

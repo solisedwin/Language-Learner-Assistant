@@ -28,11 +28,11 @@ export class ConversationsService {
     return responseText;
   }
 
-  public async continueConversation(germanText: string) {
+  public async continueConversation(transcript: string) {
     const continueConversationPrompt = this.currentScenario.CONTINUE_CONVERSATION;
     const responseText = await this.openAIClient.continueConversation(
       continueConversationPrompt,
-      germanText,
+      transcript,
     );
     console.log("Continue conversation text: ", responseText);
     return responseText;

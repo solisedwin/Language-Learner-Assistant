@@ -20,9 +20,7 @@ type RolePlayOptionButtonsProps = {
   onRolePlaySelection: (rolePlaySelection: RoleplayScenario) => void;
 };
 
-function RolePlayOptionButtons({
-  onRolePlaySelection,
-}: RolePlayOptionButtonsProps) {
+function RolePlayOptionButtons({ onRolePlaySelection }: RolePlayOptionButtonsProps) {
   const roleplayScenarioOptions: RoleplayScenarioButtons[] = [
     {
       scenario: "Supermarket",

@@ -11,16 +11,9 @@ type MicrophoneProps = {
   isRolePlayInProgress: boolean;
 };
 
-function Microphone({
-  onConversationReply,
-  isRolePlayInProgress,
-}: MicrophoneProps) {
-  const {
-    isRecordingSpeech,
-    speechTranscript,
-    speechRecognitionStart,
-    speechRecognitionEnd,
-  } = useSpeechRecongnition();
+function Microphone({ onConversationReply, isRolePlayInProgress }: MicrophoneProps) {
+  const { isRecordingSpeech, speechTranscript, speechRecognitionStart, speechRecognitionEnd } =
+    useSpeechRecongnition();
 
   useEffect(() => {
     // Close Microphone from listening from the client
@@ -34,15 +27,11 @@ function Microphone({
       console.log("~~ Transcript: ", speechTranscript);
 
       const continueAIConvo = async () => {
-        const {
-          germanText,
-          englishTranslation,
-          audioURLSrc,
-        }: AIConversationResponse =
+        const { languageText, englishTranslation, audioURLSrc }: AIConversationResponse =
           await continueConversation(speechTranscript);
 
         onConversationReply({
-          germanText: germanText,
+          languageText: languageText,
           englishTranslation: englishTranslation,
           audioURLSrc: audioURLSrc,
         });
@@ -55,12 +44,8 @@ function Microphone({
     <div>
       <Button
         variant="outlined"
-        startIcon={
-          isRecordingSpeech ? <StopIcon /> : <RadioButtonCheckedIcon />
-        }
-        onClick={
-          !isRecordingSpeech ? speechRecognitionStart : speechRecognitionEnd
-        }
+        startIcon={isRecordingSpeech ? <StopIcon /> : <RadioButtonCheckedIcon />}
+        onClick={!isRecordingSpeech ? speechRecognitionStart : speechRecognitionEnd}
       >
         {isRecordingSpeech ? "Stop" : "Record"}
       </Button>
