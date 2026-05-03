@@ -29,10 +29,10 @@ function Translation({ languageText, englishTranslation }: LanguageTexts) {
 
       <TextField
         id="translation-box"
-        label={isOnEnglishTranslation ? "German" : "English"}
+        label={isOnEnglishTranslation ? "English" : "German"}
         multiline
         rows={4}
-        value={isOnEnglishTranslation ? languageText : englishTranslation}
+        value={isOnEnglishTranslation ? englishTranslation : languageText}
         slotProps={{
           input: {
             readOnly: true,

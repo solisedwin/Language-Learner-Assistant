@@ -1,7 +1,7 @@
 export type AIAudioURL = `api/converse/audiospeech/${string}`;
 
 export type LanguageTexts = {
-  text: string;
+  languageText: string;
   englishTranslation: string;
 };
 export type ConversationExchange = LanguageTexts & {

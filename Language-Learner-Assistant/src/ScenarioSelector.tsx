@@ -59,7 +59,7 @@ function ScenarioSelector() {
       }
       const audioId = await parseAudioID(conversationReply?.audioURLSrc);
       const audio = await getAudio(audioId);
-      console.log("-- Pre Signed url we are about to use: ", url);
+
       if (url) {
         await fetch(url, {
           method: "PUT",

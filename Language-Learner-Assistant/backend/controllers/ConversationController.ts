@@ -32,7 +32,7 @@ export const converse = async (AI_responseText: string): Promise<ConversationExc
 
   // TODO: Use res.json instead
   return {
-    text: AI_responseText,
+    languageText: AI_responseText,
     englishTranslation: translatedText,
     audioURLSrc: audioURLSrc,
   };
