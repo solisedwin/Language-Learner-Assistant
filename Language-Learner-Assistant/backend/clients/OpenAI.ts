@@ -30,7 +30,7 @@ export class OpenAIClient {
 
   public async continueConversation(
     continueConversationPrompt: string,
-    germanText: string,
+    text: string,
   ): Promise<string> {
     const response = await this.openAI.responses.create({
       model: "gpt-4o-mini",
@@ -42,7 +42,7 @@ export class OpenAIClient {
         },
         {
           role: "user",
-          content: germanText,
+          content: text,
         },
       ],
     });
