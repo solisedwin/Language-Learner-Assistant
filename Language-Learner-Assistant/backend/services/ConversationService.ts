@@ -10,10 +10,10 @@ export class ConversationService {
   private openAIClient: OpenAIClient;
   private currentScenario: Scenario;
   private amazonS3: AmazonS3;
-  constructor(openAIClient: OpenAIClient, amazonS3: AmazonS3) {
-    this.openAIClient = openAIClient;
+  constructor() {
+    this.openAIClient = new OpenAIClient();
     this.currentScenario = new TrainStation(); //Default Scenario
-    this.amazonS3 = amazonS3;
+    this.amazonS3 = new AmazonS3();
     if (!this.openAIClient) {
       throw new Error("OpenAI Object instance is not set");
     }

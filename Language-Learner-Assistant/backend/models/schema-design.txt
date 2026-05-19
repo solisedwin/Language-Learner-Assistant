@@ -1,0 +1,45 @@
+
+Main Features:
+- Users can roleplay scenarios in a different language
+- Can save audio and english translation of AI response.
+- Get grammer correction help and scoring (out of 100) based on response 
+
+Future Features:
+Publicly post sections of conversations so the community can give sugesstions and help correct 
+
+
+User -> Conversation (1 to many)
+Conversation -> ConversationExchange ( 1 to many )
+
+User {
+    - userid
+    - name
+    - profileIcon
+    - Conversation[]
+}
+
+Conversation {
+    - id
+    - version1
+    - language
+    - ConversationExchange[] // Order Matters 
+}
+
+ConversationExchange {
+    [
+      -  timestamp
+      -  audioUrl 
+      -  foreignLanguage
+      -  englishTranslation
+      score {
+        - scoreNumber
+        - correctionText
+      }
+    ]
+}
+
+Conversation {
+
+
+    
+}

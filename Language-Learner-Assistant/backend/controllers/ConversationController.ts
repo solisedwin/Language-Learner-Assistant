@@ -1,14 +1,12 @@
 import type { Request, Response } from "express";
-import { AudioService } from "../services/AudioService.ts";
-import { ConversationsService } from "../services/ConversationsService";
+import {
+  AudioService as audioService,
+  ConversationService as conversationService,
+  TranslationService as translationService,
+} from "./../containers/services.ts";
 import type { RoleplayScenario } from "@shared/types/RoleplayScenario";
 import crypto from "crypto";
-import { TranslationService } from "../services/TranslationService.ts";
 import type { ConversationExchange, AIAudioURL } from "@shared/types/Conversation.ts";
-
-const audioService = new AudioService();
-const conversationService = new ConversationsService();
-const translationService = new TranslationService();
 
 export const startConversation = async (req: Request, res: Response) => {
   const roleplayScenario: RoleplayScenario = req.body.scenario;

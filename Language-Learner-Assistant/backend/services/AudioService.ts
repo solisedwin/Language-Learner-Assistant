@@ -12,11 +12,11 @@ export class AudioService {
   private openAIClient: OpenAIClient;
   private audioCache: AudioCache = {};
 
-  constructor() {
-    this.openAIClient = new OpenAIClient();
-    if (!this.openAIClient) {
+  constructor(openAIClient: OpenAIClient) {
+    if (!openAIClient) {
       throw new Error("OpenAI Object instance is not set");
     }
+    this.openAIClient = openAIClient;
   }
 
   public async textToSpeech(text: string): Promise<Buffer> {
