@@ -1,50 +1,36 @@
 import { OpenAIClient } from "../clients/OpenAI.ts";
 import type { RoleplayScenario } from "@shared/types/RoleplayScenario";
 import type { ConversationExchange } from "@shared/types/Conversation";
-import { AmazonS3 } from "clients/AmazonS3.ts";
 import Scenario from "./../scenarios/Scenario.ts";
 import { ScenarioFactory } from "../scenarios/ScenarioFactory.ts";
-import TrainStation from "scenarios/TrainStation.ts";
+import { PromptResponse } from "./../types/AIPrompt.ts";
 
 export class ConversationService {
   private openAIClient: OpenAIClient;
-  private currentScenario: Scenario;
-  private amazonS3: AmazonS3;
-  constructor() {
-    this.openAIClient = new OpenAIClient();
-    this.currentScenario = new TrainStation(); //Default Scenario
-    this.amazonS3 = new AmazonS3();
-    if (!this.openAIClient) {
+  private scenarioFactory: ScenarioFactory;
+  constructor(openAIClient: OpenAIClient) {
+    if (!openAIClient) {
       throw new Error("OpenAI Object instance is not set");
     }
+    this.openAIClient = openAIClient;
+    this.scenarioFactory = new ScenarioFactory();
   }
 
   public async startConversation(roleplayScenario: RoleplayScenario) {
-    const scenarioFactory = new ScenarioFactory();
-    const scenario: Scenario = scenarioFactory.getScenario(roleplayScenario);
-    this.currentScenario = scenario;
+    const scenario: Scenario = this.scenarioFactory.getScenario("TrainStation");
     const startConversationPrompt = scenario.START_CONVERSATION;
-    const responseText = await this.openAIClient.generateTextResponse(startConversationPrompt);
+    const promptResponse = await this.openAIClient.initialStartPrompt(startConversationPrompt);
+    const responseText = promptResponse.outputText;
     return responseText;
   }
 
-  public async continueConversation(transcript: string) {
-    const continueConversationPrompt = this.currentScenario.CONTINUE_CONVERSATION;
-    const responseText = await this.openAIClient.continueConversation(
-      continueConversationPrompt,
-      transcript,
-    );
-    console.log("Continue conversation text: ", responseText);
-    return responseText;
-  }
+  public async continueConversation(userResponse: string): Promise<PromptResponse> {
+    // Test temp code . Need to store Scenario state in Redis or DB
+    // Hard coded to Trainstation
+    const scenario: Scenario = this.scenarioFactory.getScenario("TrainStation");
 
-  public async getPreSignedUrl() {
-    let url = null;
-    try {
-      url = await this.amazonS3.getPreSignedUrl();
-    } catch (error) {
-      console.error("Error on retrieved presigned url. Error: ", error);
-    }
-    return url;
+    const continueConversationPrompt = scenario.CONTINUE_CONVERSATION;
+    const response = this.openAIClient.createPrompt(continueConversationPrompt, userResponse);
+    return response;
   }
 }

@@ -1,8 +1,8 @@
 import OpenAI from "openai";
+import { PromptResponse } from "./../types/AIPrompt";
 
 export class OpenAIClient {
   private openAI: OpenAI;
-  private currentResponseID: string | null = null;
   constructor() {
     const secretKey = process.env.OPENAI_SECRET_KEY || "";
     if (!secretKey) {
@@ -13,41 +13,45 @@ export class OpenAIClient {
     });
   }
 
-  public async generateTextResponse(text: string): Promise<string> {
+  public async initialStartPrompt(prompt: string): Promise<PromptResponse> {
     const response = await this.openAI.responses.create({
-      model: "gpt-4o-mini",
-      previous_response_id: this.currentResponseID,
+      model: process.env.OPENAI_CONVERSATION_MODEL,
       input: [
         {
           role: "system",
-          content: text,
+          content: prompt,
         },
       ],
     });
-    this.currentResponseID = response.id;
-    return response.output_text;
+    return {
+      id: response.id,
+      outputText: response.output_text,
+    };
   }
 
-  public async continueConversation(
-    continueConversationPrompt: string,
-    text: string,
-  ): Promise<string> {
+  public async createPrompt(
+    continuedPrompt: string,
+    conversationID: string,
+  ): Promise<PromptResponse> {
+    if (!conversationID) {
+      throw Error("Previous repsonse ID is required");
+    }
     const response = await this.openAI.responses.create({
-      model: "gpt-4o-mini",
-      previous_response_id: this.currentResponseID,
-      input: [
-        {
-          role: "system",
-          content: continueConversationPrompt,
-        },
-        {
-          role: "user",
-          content: text,
-        },
-      ],
+      model: process.env.OPENAI_CONVERSATION_MODEL,
+      previous_response_id: conversationID,
+      ...(continuedPrompt
+        ? [
+            {
+              role: "user",
+              content: continuedPrompt,
+            },
+          ]
+        : []),
     });
-    this.currentResponseID = response.id;
-    return response.output_text;
+    return {
+      id: response.id,
+      outputText: response.output_text,
+    };
   }
 
   public async textToSpeech(text: string): Promise<Buffer<ArrayBuffer>> {
@@ -55,7 +59,7 @@ export class OpenAIClient {
     console.log("Text we will convert to audio: ", text);
     try {
       const audioResponse = await this.openAI.audio.speech.create({
-        model: "gpt-4o-mini-tts",
+        model: process.env.OPENAI_AUDIO_MODEL as string,
         voice: "coral",
         input: text,
         instructions: "Speak in a cheerful and positive tone.",
@@ -66,4 +70,43 @@ export class OpenAIClient {
       throw new Error("Failed to generate audio");
     }
   }
+
+  /*
+      public async grammarFeedback(grammarAIPrompt: string, text: string): Promise<string> {
+        const response = await this.openAI.responses.create({
+          model: process.env.OPENAI_CONVERSATION_MODEL,
+          previous_response_id: this.currentResponseID,
+          input: [
+            {
+              role: "system",
+              content: grammarAIPrompt,
+            },
+            {
+              role: "user",
+              content: text,
+            },
+          ],
+        });
+        this.currentResponseID = response.id;
+        return response.output_text;
+
+
+
+    public async generateTextResponse(text: string): Promise<string> {
+    const response = await this.openAI.responses.create({
+      model: process.env.OPENAI_CONVERSATION_MODEL,
+      previous_response_id: this.currentResponseID,
+      input: [
+        {
+          role: "system",
+          content: text,
+        },
+      ],
+    });
+    this.currentResponseID = response.id;
+    return response.output_text;
+  }
+
+  }
+  */
 }

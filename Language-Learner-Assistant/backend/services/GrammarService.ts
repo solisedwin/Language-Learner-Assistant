@@ -8,13 +8,13 @@ export class GrammarService {
   }
 
   private async grammarCorrection(speechTranscript: string) {
-    const corrections = this.openAIClient.grammarFeedback(speechTranscript);
-    return corrections;
+    // const corrections = this.openAIClient.createPrompt(speechTranscript);
+    // return corrections;
   }
 
   private async scoreUserResponse(speechTranscript: string) {
-    const score = this.openAIClient.scoreUserResponse(speechTranscript);
-    return score;
+    // const score = this.openAIClient.scoreUserResponse(speechTranscript);
+    // return score;
   }
 
   public async feedbackHelp(speechTranscript: string) {
