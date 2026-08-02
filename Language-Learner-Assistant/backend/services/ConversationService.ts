@@ -10,7 +10,7 @@ export class ConversationService {
   private scenarioFactory: ScenarioFactory;
   constructor(openAIClient: OpenAIClient) {
     if (!openAIClient) {
-      throw new Error("OpenAI Object instance is not set");
+      throw new Error("OpenAI Object instance is not set"); // testing
     }
     this.openAIClient = openAIClient;
     this.scenarioFactory = new ScenarioFactory();
